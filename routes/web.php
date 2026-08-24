@@ -12,6 +12,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/videos', function () {
+    return Inertia::render('Videos');
+})->name('videos');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

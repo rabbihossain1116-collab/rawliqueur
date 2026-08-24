@@ -177,7 +177,7 @@ export default function Home() {
                     </div>
 
                     {/* Talent Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                         {talentData.map((talent) => (
                             <TalentCard key={talent.id} talent={talent} lang={lang} />
                         ))}
