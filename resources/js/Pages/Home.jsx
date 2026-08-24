@@ -3,6 +3,7 @@ import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import HeroSlider from '@/Components/HeroSlider';
 import TalentCard from '@/Components/TalentCard';
+import LatestVideos from '@/Components/LatestVideos';
 
 const talentData = [
     {
@@ -196,6 +197,9 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Latest Videos Section */}
+            <LatestVideos lang={lang} />
 
             {/* CTA Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#1a0a0a] via-[#2a1212] to-[#1a0a0a]">
