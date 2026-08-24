@@ -4,10 +4,12 @@ import PublicLayout from '@/Layouts/PublicLayout';
 import HeroSlider from '@/Components/HeroSlider';
 import TalentCard from '@/Components/TalentCard';
 import LatestVideos from '@/Components/LatestVideos';
+import VideoModal from '@/Components/VideoModal';
+import SubmitTalentModal from '@/Components/SubmitTalentModal';
 
 const talentData = [
     {
-        id: 1,
+        id: 'sqJ2QhjBQaw',
         name: 'Sneha Chakraborty',
         category: 'Singer',
         location: 'Bangladesh',
@@ -17,7 +19,7 @@ const talentData = [
         badge: 'Most Likes',
     },
     {
-        id: 2,
+        id: 'gxet54MhNQI',
         name: 'Rahul Saha',
         category: 'Musician',
         location: 'Bangladesh',
@@ -27,7 +29,7 @@ const talentData = [
         badge: 'Most Views',
     },
     {
-        id: 3,
+        id: 'zEqqW-USajs',
         name: 'Tania Khatun',
         category: 'Singer',
         location: 'Kolkata',
@@ -37,7 +39,7 @@ const talentData = [
         badge: null,
     },
     {
-        id: 4,
+        id: '4gzRteJyLMA',
         name: 'Ridoy Das',
         category: 'Musician',
         location: 'Bangladesh',
@@ -47,7 +49,7 @@ const talentData = [
         badge: 'Rising Star',
     },
     {
-        id: 5,
+        id: '2ay9OPlY38A',
         name: 'Moumita Bose',
         category: 'Singer',
         location: 'Kolkata',
@@ -57,7 +59,7 @@ const talentData = [
         badge: null,
     },
     {
-        id: 6,
+        id: 'h89PrRNHV-E',
         name: 'Farhan Ahmed',
         category: 'Poet',
         location: 'Bangladesh',
@@ -69,9 +71,21 @@ const talentData = [
 ];
 
 export default function Home() {
-    const [lang, setLang] = useState('bn');
+    const [lang, setLang] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('rl_lang') || 'bn';
+        }
+        return 'bn';
+    });
     const [activeTab, setActiveTab] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
+    const [selectedTalent, setSelectedTalent] = useState(null);
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
+
+    const handleSetLang = (newLang) => {
+        setLang(newLang);
+        localStorage.setItem('rl_lang', newLang);
+    };
 
     const tabs = lang === 'bn'
         ? [
@@ -108,50 +122,47 @@ export default function Home() {
     const viewAllText = lang === 'bn' ? 'সব দেখুন' : 'View Full Rankings';
 
     return (
-        <PublicLayout lang={lang} setLang={setLang}>
+        <PublicLayout lang={lang} setLang={handleSetLang} onOpenSubmit={() => setShowSubmitModal(true)}>
             <Head title="RAW LIQUEUR - Pure Bengali Talent" />
 
-            {/* Hero Slider */}
             <HeroSlider lang={lang} />
 
             {/* আজকের প্রতিভা Section */}
-            <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-                <div className="absolute inset-0 opacity-5">
+            <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="absolute inset-0 opacity-[0.015]">
                     <div className="absolute inset-0" style={{
-                        backgroundImage: `radial-gradient(circle at 25px 25px, #D4AF37 2%, transparent 0%)`,
+                        backgroundImage: `radial-gradient(circle at 25px 25px, #C41E3A 1.5%, transparent 0%)`,
                         backgroundSize: '50px 50px'
                     }} />
                 </div>
 
                 <div className="max-w-7xl mx-auto relative">
-                    {/* Section Header */}
                     <div className="text-center mb-12">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <div className="w-16 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
-                            <svg className="w-6 h-6 text-[#D4AF37]" fill="currentColor" viewBox="0 0 24 24">
+                            <div className="w-16 h-px bg-gradient-to-r from-transparent to-[#C41E3A]" />
+                            <svg className="w-6 h-6 text-[#C9A84C]" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                             </svg>
-                            <div className="w-16 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
+                            <div className="w-16 h-px bg-gradient-to-l from-transparent to-[#C41E3A]" />
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif mb-3">
+                        <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] font-serif mb-3">
                             {sectionTitle}
                         </h2>
-                        <p className="text-white/50 max-w-2xl mx-auto">
+                        <p className="text-gray-500 max-w-2xl mx-auto">
                             {sectionSubtitle}
                         </p>
                     </div>
 
-                    {/* Tabs & Sort */}
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-                        <div className="flex gap-2 bg-[#2a1212]/50 p-1 rounded-full border border-white/5">
+                        <div className="flex gap-2 bg-gray-50 p-1 rounded-full border border-gray-200">
                             {tabs.map((tab) => (
                                 <button
                                     key={tab.key}
                                     onClick={() => setActiveTab(tab.key)}
                                     className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
                                         activeTab === tab.key
-                                            ? 'bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/30'
-                                            : 'text-white/50 hover:text-white'
+                                            ? 'bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/20'
+                                            : 'text-gray-500 hover:text-[#1a1a1a]'
                                     }`}
                                 >
                                     {tab.label}
@@ -166,8 +177,8 @@ export default function Home() {
                                     onClick={() => setSortBy(opt.key)}
                                     className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all ${
                                         sortBy === opt.key
-                                            ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30'
-                                            : 'text-white/40 hover:text-white/60'
+                                            ? 'bg-[#C41E3A]/10 text-[#C41E3A] border border-[#C41E3A]/20'
+                                            : 'text-gray-400 hover:text-gray-600'
                                     }`}
                                 >
                                     {opt.label}
@@ -176,18 +187,16 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Talent Grid */}
                     <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                         {talentData.map((talent) => (
-                            <TalentCard key={talent.id} talent={talent} lang={lang} />
+                            <TalentCard key={talent.id} talent={talent} lang={lang} onClick={setSelectedTalent} />
                         ))}
                     </div>
 
-                    {/* View All */}
-                    <div className="text-center">
+                    <div className="text-center mt-8">
                         <a
                             href="/winners?period=daily"
-                            className="inline-flex items-center gap-2 px-8 py-3 border border-[#D4AF37]/30 text-[#D4AF37] font-semibold rounded-full hover:bg-[#D4AF37]/10 transition-all"
+                            className="inline-flex items-center gap-2 px-8 py-3 border border-[#C41E3A]/20 text-[#C41E3A] font-semibold rounded-full hover:bg-[#C41E3A]/5 transition-all"
                         >
                             {viewAllText}
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,39 +207,42 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Latest Videos Section */}
             <LatestVideos lang={lang} />
 
             {/* CTA Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#1a0a0a] via-[#2a1212] to-[#1a0a0a]">
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="relative inline-block mb-8">
-                        <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#D4AF37]/20 to-[#B8860B]/20 flex items-center justify-center border border-[#D4AF37]/20">
-                            <svg className="w-16 h-16 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#C41E3A]/10 to-[#C9A84C]/10 flex items-center justify-center border border-[#C41E3A]/10">
+                            <svg className="w-16 h-16 text-[#C41E3A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                             </svg>
                         </div>
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl font-bold text-white font-serif mb-4">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] font-serif mb-4">
                         {lang === 'bn' ? 'পরবর্তী ফিচার্ড শিল্পী হন' : 'Be the Next Featured Artist'}
                     </h2>
-                    <p className="text-xl text-[#D4AF37] font-serif mb-6">
+                    <p className="text-xl text-[#C41E3A] font-serif mb-6">
                         {lang === 'bn'
                             ? 'আমাদের কাঁচা প্রতিভা দেখান। কোনো AI নয়, কোনো এডিট নয়, শুধু আপনি।'
                             : 'Show us your raw talent. No AI, No Edit, Just You.'}
                     </p>
-                    <a
-                        href="/submit-talent"
-                        className="inline-flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white font-semibold rounded-full hover:from-[#D42B4B] hover:to-[#A00000] transition-all shadow-xl shadow-[#C41E3A]/30 text-lg"
+                    <button
+                        type="button"
+                        onClick={() => setShowSubmitModal(true)}
+                        className="inline-flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white font-semibold rounded-full hover:from-[#D42B4B] hover:to-[#A00000] transition-all shadow-xl shadow-[#C41E3A]/20 text-lg"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                         {lang === 'bn' ? 'এখনই জমা দিন' : 'Submit Your Talent'}
-                    </a>
+                    </button>
                 </div>
             </section>
+
+            <VideoModal video={selectedTalent} onClose={() => setSelectedTalent(null)} />
+            <SubmitTalentModal open={showSubmitModal} onClose={() => setShowSubmitModal(false)} lang={lang} />
         </PublicLayout>
     );
 }

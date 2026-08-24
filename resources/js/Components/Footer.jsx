@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import ApplicationLogo from './ApplicationLogo';
 
 export default function Footer({ lang = 'bn' }) {
     const currentYear = new Date().getFullYear();
@@ -68,23 +69,16 @@ export default function Footer({ lang = 'bn' }) {
         : 'A platform for raw, real and remarkable talent from Bangladesh & Kolkata.';
 
     return (
-        <footer className="bg-[#0d0505] border-t border-[#D4AF37]/10">
+        <footer className="bg-[#111111] border-t border-white/5">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                    {/* Brand */}
                     <div className="lg:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-4">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B8860B] flex items-center justify-center">
-                                <span className="text-[#1a0a0a] font-bold text-lg font-serif">R</span>
-                            </div>
-                            <span className="text-[#D4AF37] font-bold text-xl tracking-wider font-serif">
-                                RAWLIQUEUR
-                            </span>
+                            <ApplicationLogo className="h-10 w-auto brightness-0 invert opacity-90" />
                         </Link>
-                        <p className="text-white/40 text-sm leading-relaxed mb-6">
+                        <p className="text-white/50 text-sm leading-relaxed mb-6">
                             {description}
                         </p>
-                        {/* Social Icons */}
                         <div className="flex gap-3">
                             {[
                                 { name: 'facebook', url: 'https://facebook.com/rawliqueur' },
@@ -97,7 +91,7 @@ export default function Footer({ lang = 'bn' }) {
                                     href={social.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] transition-colors"
+                                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-[#C41E3A]/20 hover:text-[#C41E3A] transition-colors"
                                 >
                                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                         {social.name === 'facebook' && <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />}
@@ -110,9 +104,8 @@ export default function Footer({ lang = 'bn' }) {
                         </div>
                     </div>
 
-                    {/* Quick Links */}
                     <div>
-                        <h3 className="text-[#D4AF37] font-semibold text-sm tracking-wider uppercase mb-4">
+                        <h3 className="text-[#C9A84C] font-semibold text-sm tracking-wider uppercase mb-4">
                             {lang === 'bn' ? 'দ্রুত লিংক' : 'Quick Links'}
                         </h3>
                         <ul className="space-y-2">
@@ -120,7 +113,7 @@ export default function Footer({ lang = 'bn' }) {
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
-                                        className="text-white/40 hover:text-[#D4AF37] text-sm transition-colors"
+                                        className="text-white/50 hover:text-[#C9A84C] text-sm transition-colors"
                                     >
                                         {link.label}
                                     </Link>
@@ -129,9 +122,8 @@ export default function Footer({ lang = 'bn' }) {
                         </ul>
                     </div>
 
-                    {/* Support */}
                     <div>
-                        <h3 className="text-[#D4AF37] font-semibold text-sm tracking-wider uppercase mb-4">
+                        <h3 className="text-[#C9A84C] font-semibold text-sm tracking-wider uppercase mb-4">
                             {lang === 'bn' ? 'সহায়তা' : 'Help & Support'}
                         </h3>
                         <ul className="space-y-2">
@@ -139,7 +131,7 @@ export default function Footer({ lang = 'bn' }) {
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
-                                        className="text-white/40 hover:text-[#D4AF37] text-sm transition-colors"
+                                        className="text-white/50 hover:text-[#C9A84C] text-sm transition-colors"
                                     >
                                         {link.label}
                                     </Link>
@@ -148,9 +140,8 @@ export default function Footer({ lang = 'bn' }) {
                         </ul>
                     </div>
 
-                    {/* Categories & Newsletter */}
                     <div>
-                        <h3 className="text-[#D4AF37] font-semibold text-sm tracking-wider uppercase mb-4">
+                        <h3 className="text-[#C9A84C] font-semibold text-sm tracking-wider uppercase mb-4">
                             {lang === 'bn' ? 'ক্যাটাগরি' : 'Categories'}
                         </h3>
                         <ul className="space-y-2 mb-8">
@@ -158,7 +149,7 @@ export default function Footer({ lang = 'bn' }) {
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
-                                        className="text-white/40 hover:text-[#D4AF37] text-sm transition-colors"
+                                        className="text-white/50 hover:text-[#C9A84C] text-sm transition-colors"
                                     >
                                         {link.label}
                                     </Link>
@@ -166,16 +157,15 @@ export default function Footer({ lang = 'bn' }) {
                             ))}
                         </ul>
 
-                        {/* Newsletter */}
-                        <h3 className="text-[#D4AF37] font-semibold text-sm tracking-wider uppercase mb-3">
+                        <h3 className="text-[#C9A84C] font-semibold text-sm tracking-wider uppercase mb-3">
                             {lang === 'bn' ? 'নিউজলেটার' : 'Newsletter'}
                         </h3>
-                        <p className="text-white/40 text-sm mb-3">{newsletterText}</p>
+                        <p className="text-white/50 text-sm mb-3">{newsletterText}</p>
                         <div className="flex">
                             <input
                                 type="email"
                                 placeholder={lang === 'bn' ? 'ইমেইল দিন' : 'Your email'}
-                                className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-l-full text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#D4AF37]/50"
+                                className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-l-full text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#C9A84C]/50"
                             />
                             <button className="px-4 py-2 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white rounded-r-full hover:from-[#D42B4B] hover:to-[#A00000] transition-all">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,10 +176,9 @@ export default function Footer({ lang = 'bn' }) {
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-white/30 text-sm">{copyright}</p>
-                    <div className="flex items-center gap-1 text-white/20 text-sm">
+                    <div className="flex items-center gap-1 text-white/30 text-sm">
                         <span>Made with</span>
                         <svg className="w-4 h-4 text-[#C41E3A]" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />

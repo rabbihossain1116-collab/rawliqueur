@@ -148,9 +148,8 @@ const VideoCard = ({ video, onClick }) => {
     return (
         <button
             onClick={() => onClick(video)}
-            className="group relative bg-[#2a1212]/40 rounded-xl overflow-hidden border border-white/5 hover:border-[#D4AF37]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/5 block text-left w-full"
+            className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#C41E3A]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[#C41E3A]/5 block text-left w-full"
         >
-            {/* Thumbnail */}
             <div className="relative aspect-video overflow-hidden">
                 <img
                     src={video.thumbnail}
@@ -158,18 +157,15 @@ const VideoCard = ({ video, onClick }) => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
 
-                {/* Duration Badge */}
-                <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-black/80 text-white text-[10px] font-medium rounded">
+                <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-medium rounded">
                     {video.duration}
                 </div>
 
-                {/* Category Badge */}
                 <div className="absolute top-1.5 left-1.5 px-2 py-0.5 bg-[#C41E3A] text-white text-[10px] font-semibold rounded-full capitalize">
                     {video.category}
                 </div>
 
-                {/* Play Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
                     <div className="w-10 h-10 rounded-full bg-[#C41E3A]/90 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                         <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
@@ -178,18 +174,16 @@ const VideoCard = ({ video, onClick }) => {
                 </div>
             </div>
 
-            {/* Info */}
             <div className="p-2.5">
-                <h4 className="text-white font-medium text-xs leading-snug line-clamp-2 mb-1.5 group-hover:text-[#D4AF37] transition-colors">
+                <h4 className="text-[#1a1a1a] font-semibold text-xs leading-snug line-clamp-2 mb-1.5 group-hover:text-[#C41E3A] transition-colors">
                     {video.title}
                 </h4>
 
-                <p className="text-white/40 text-[11px] mb-1.5">
-                    <span className="text-[#D4AF37]/70">{video.artist}</span>
+                <p className="text-gray-500 text-[11px] mb-1.5">
+                    <span className="text-[#C41E3A]/80 font-medium">{video.artist}</span>
                 </p>
 
-                {/* Views & Likes */}
-                <div className="flex items-center gap-3 text-[10px] text-white/30">
+                <div className="flex items-center gap-3 text-[10px] text-gray-400">
                     <span className="flex items-center gap-1">
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -252,31 +246,28 @@ export default function LatestVideos({ lang = 'bn' }) {
         : videosData.filter((v) => v.category === activeFilter);
 
     return (
-        <section id="videos" className="relative py-16 px-4 sm:px-6 lg:px-8 bg-[#0d0505]">
+        <section id="videos" className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
             <div className="max-w-7xl mx-auto">
-                {/* Section Header */}
                 <div className="text-center mb-8">
                     <div className="flex items-center justify-center gap-3 mb-3">
-                        <div className="w-12 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
+                        <div className="w-12 h-px bg-gradient-to-r from-transparent to-[#C41E3A]" />
                         <svg className="w-5 h-5 text-[#C41E3A]" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
                         </svg>
-                        <div className="w-12 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
+                        <div className="w-12 h-px bg-gradient-to-l from-transparent to-[#C41E3A]" />
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-white font-serif mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] font-serif mb-2">
                         {sectionTitle}
                     </h2>
-                    <p className="text-lg text-[#D4AF37] font-serif mb-1">
+                    <p className="text-lg text-[#C41E3A] font-serif mb-1">
                         Raw Performances to Watch
                     </p>
-                    <p className="text-white/50 max-w-xl mx-auto text-sm">
+                    <p className="text-gray-500 max-w-xl mx-auto text-sm">
                         {sectionSubtitle}
                     </p>
                 </div>
 
-                {/* Filters & Sort */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
-                    {/* Filters */}
                     <div className="flex flex-wrap gap-1.5 justify-center">
                         {filters.map((filter) => (
                             <button
@@ -284,8 +275,8 @@ export default function LatestVideos({ lang = 'bn' }) {
                                 onClick={() => setActiveFilter(filter.key)}
                                 className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${
                                     activeFilter === filter.key
-                                        ? 'bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/30'
-                                        : 'bg-[#2a1212]/50 text-white/50 hover:text-white border border-white/5 hover:border-white/10'
+                                        ? 'bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/20'
+                                        : 'bg-white text-gray-500 hover:text-[#1a1a1a] border border-gray-200 hover:border-gray-300'
                                 }`}
                             >
                                 {filter.label}
@@ -293,16 +284,15 @@ export default function LatestVideos({ lang = 'bn' }) {
                         ))}
                     </div>
 
-                    {/* Sort */}
-                    <div className="flex items-center gap-1 bg-[#2a1212]/50 p-0.5 rounded-full border border-white/5">
+                    <div className="flex items-center gap-1 bg-white p-0.5 rounded-full border border-gray-200">
                         {sortOptions.map((opt) => (
                             <button
                                 key={opt.key}
                                 onClick={() => setActiveSort(opt.key)}
                                 className={`px-3 py-1 text-[10px] font-medium rounded-full transition-all ${
                                     activeSort === opt.key
-                                        ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30'
-                                        : 'text-white/40 hover:text-white/60'
+                                        ? 'bg-[#C41E3A]/10 text-[#C41E3A] border border-[#C41E3A]/20'
+                                        : 'text-gray-400 hover:text-gray-600'
                                 }`}
                             >
                                 {opt.label}
@@ -311,25 +301,22 @@ export default function LatestVideos({ lang = 'bn' }) {
                     </div>
                 </div>
 
-                {/* Video Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                     {filteredVideos.map((video) => (
                         <VideoCard key={video.id} video={video} onClick={setSelectedVideo} />
                     ))}
                 </div>
 
-                {/* Load More */}
                 <div className="text-center mt-8">
                     <a
                         href="/videos"
-                        className="inline-block px-6 py-2 border border-[#D4AF37]/30 text-[#D4AF37] text-sm font-medium rounded-full hover:bg-[#D4AF37]/10 transition-all"
+                        className="inline-block px-6 py-2 border border-[#C41E3A]/30 text-[#C41E3A] text-sm font-medium rounded-full hover:bg-[#C41E3A]/5 transition-all"
                     >
                         {lang === 'bn' ? 'আরো দেখুন' : 'Load More'}
                     </a>
                 </div>
             </div>
 
-            {/* Video Modal */}
             <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
         </section>
     );

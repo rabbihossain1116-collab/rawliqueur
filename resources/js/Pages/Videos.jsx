@@ -4,9 +4,19 @@ import PublicLayout from '@/Layouts/PublicLayout';
 import { videosData } from '@/Components/LatestVideos';
 
 export default function Videos() {
-    const [lang, setLang] = useState('bn');
+    const [lang, setLang] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('rl_lang') || 'bn';
+        }
+        return 'bn';
+    });
     const [activeFilter, setActiveFilter] = useState('all');
     const [activeSort, setActiveSort] = useState('newest');
+
+    const handleSetLang = (newLang) => {
+        setLang(newLang);
+        localStorage.setItem('rl_lang', newLang);
+    };
 
     const filters = lang === 'bn'
         ? [
@@ -46,35 +56,32 @@ export default function Videos() {
         : videosData.filter((v) => v.category === activeFilter);
 
     return (
-        <PublicLayout lang={lang} setLang={setLang}>
+        <PublicLayout lang={lang} setLang={handleSetLang}>
             <Head title={pageTitle} />
 
-            {/* Page Header */}
-            <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-[#0d0505]">
+            <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto text-center">
                     <div className="flex items-center justify-center gap-3 mb-4">
-                        <div className="w-12 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
+                        <div className="w-12 h-px bg-gradient-to-r from-transparent to-[#C41E3A]" />
                         <svg className="w-5 h-5 text-[#C41E3A]" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
                         </svg>
-                        <div className="w-12 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
+                        <div className="w-12 h-px bg-gradient-to-l from-transparent to-[#C41E3A]" />
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-bold text-white font-serif mb-3">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] font-serif mb-3">
                         {pageTitle}
                     </h1>
-                    <p className="text-[#D4AF37] font-serif mb-2">
+                    <p className="text-[#C41E3A] font-serif mb-2">
                         Raw Performances to Watch
                     </p>
-                    <p className="text-white/50 max-w-xl mx-auto text-sm">
+                    <p className="text-gray-500 max-w-xl mx-auto text-sm">
                         {pageSubtitle}
                     </p>
                 </div>
             </section>
 
-            {/* Videos Grid */}
-            <section className="pb-20 px-4 sm:px-6 lg:px-8 bg-[#0d0505]">
+            <section className="pb-20 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
-                    {/* Filters & Sort */}
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-8">
                         <div className="flex flex-wrap gap-1.5 justify-center">
                             {filters.map((filter) => (
@@ -83,8 +90,8 @@ export default function Videos() {
                                     onClick={() => setActiveFilter(filter.key)}
                                     className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${
                                         activeFilter === filter.key
-                                            ? 'bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/30'
-                                            : 'bg-[#2a1212]/50 text-white/50 hover:text-white border border-white/5 hover:border-white/10'
+                                            ? 'bg-[#C41E3A] text-white shadow-lg shadow-[#C41E3A]/20'
+                                            : 'bg-gray-100 text-gray-500 hover:text-[#1a1a1a] border border-gray-200 hover:border-gray-300'
                                     }`}
                                 >
                                     {filter.label}
@@ -92,15 +99,15 @@ export default function Videos() {
                             ))}
                         </div>
 
-                        <div className="flex items-center gap-1 bg-[#2a1212]/50 p-0.5 rounded-full border border-white/5">
+                        <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-full border border-gray-200">
                             {sortOptions.map((opt) => (
                                 <button
                                     key={opt.key}
                                     onClick={() => setActiveSort(opt.key)}
                                     className={`px-3 py-1 text-[10px] font-medium rounded-full transition-all ${
                                         activeSort === opt.key
-                                            ? 'bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30'
-                                            : 'text-white/40 hover:text-white/60'
+                                            ? 'bg-[#C41E3A]/10 text-[#C41E3A] border border-[#C41E3A]/20'
+                                            : 'text-gray-400 hover:text-gray-600'
                                     }`}
                                 >
                                     {opt.label}
@@ -109,7 +116,6 @@ export default function Videos() {
                         </div>
                     </div>
 
-                    {/* Video Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                         {filteredVideos.map((video) => (
                             <a
@@ -117,22 +123,21 @@ export default function Videos() {
                                 href={`https://www.youtube.com/watch?v=${video.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group relative bg-[#2a1212]/40 rounded-xl overflow-hidden border border-white/5 hover:border-[#D4AF37]/20 transition-all duration-300 hover:shadow-lg hover:shadow-[#D4AF37]/5 block"
+                                className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#C41E3A]/20 transition-all duration-300 hover:shadow-xl hover:shadow-[#C41E3A]/5 block"
                             >
-                                {/* Thumbnail */}
                                 <div className="relative aspect-video overflow-hidden">
                                     <img
                                         src={video.thumbnail}
                                         alt={video.title}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
-                                    <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-black/80 text-white text-[10px] font-medium rounded">
+                                    <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-medium rounded">
                                         {video.duration}
                                     </div>
                                     <div className="absolute top-1.5 left-1.5 px-2 py-0.5 bg-[#C41E3A] text-white text-[10px] font-semibold rounded-full capitalize">
                                         {video.category}
                                     </div>
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
                                         <div className="w-10 h-10 rounded-full bg-[#C41E3A]/90 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                                             <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M8 5v14l11-7z" />
@@ -141,15 +146,14 @@ export default function Videos() {
                                     </div>
                                 </div>
 
-                                {/* Info */}
                                 <div className="p-2.5">
-                                    <h4 className="text-white font-medium text-xs leading-snug line-clamp-2 mb-1.5 group-hover:text-[#D4AF37] transition-colors">
+                                    <h4 className="text-[#1a1a1a] font-semibold text-xs leading-snug line-clamp-2 mb-1.5 group-hover:text-[#C41E3A] transition-colors">
                                         {video.title}
                                     </h4>
-                                    <p className="text-[#D4AF37]/70 text-[11px] mb-1.5">
-                                        {video.artist}
+                                    <p className="text-gray-500 text-[11px] mb-1.5">
+                                        <span className="text-[#C41E3A]/80 font-medium">{video.artist}</span>
                                     </p>
-                                    <div className="flex items-center gap-3 text-[10px] text-white/30">
+                                    <div className="flex items-center gap-3 text-[10px] text-gray-400">
                                         <span className="flex items-center gap-1">
                                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -169,8 +173,7 @@ export default function Videos() {
                         ))}
                     </div>
 
-                    {/* Total Count */}
-                    <div className="text-center mt-8 text-white/30 text-sm">
+                    <div className="text-center mt-8 text-gray-400 text-sm">
                         {lang === 'bn'
                             ? `মোট ${filteredVideos.length}টি ভিডিও`
                             : `Total ${filteredVideos.length} videos`}

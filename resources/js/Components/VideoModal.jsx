@@ -21,24 +21,22 @@ export default function VideoModal({ video, onClose }) {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
         >
             <div
-                className="relative w-full max-w-3xl bg-[#1a0a0a] rounded-2xl overflow-hidden border border-[#D4AF37]/20 shadow-2xl"
+                className="relative w-full max-w-3xl bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/80 transition-colors"
+                    className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white/80 hover:text-white hover:bg-black/70 transition-colors"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
 
-                {/* Video Player */}
                 <div className="relative aspect-video bg-black">
                     <iframe
                         src={`https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0`}
@@ -49,14 +47,13 @@ export default function VideoModal({ video, onClose }) {
                     />
                 </div>
 
-                {/* Video Info */}
                 <div className="p-4">
                     <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                            <h3 className="text-white font-semibold text-sm line-clamp-2 mb-1">
+                            <h3 className="text-[#1a1a1a] font-semibold text-sm line-clamp-2 mb-1">
                                 {video.title}
                             </h3>
-                            <p className="text-[#D4AF37]/70 text-xs">
+                            <p className="text-[#C41E3A] text-xs font-medium">
                                 {video.artist}
                             </p>
                         </div>
@@ -65,7 +62,7 @@ export default function VideoModal({ video, onClose }) {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-4 mt-3 text-xs text-white/40">
+                    <div className="flex items-center gap-4 mt-3 text-xs text-gray-400">
                         <span className="flex items-center gap-1">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
