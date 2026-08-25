@@ -115,4 +115,17 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Talent Submission Inbox
+    |--------------------------------------------------------------------------
+    |
+    | Where the public submission form sends its notifications. Set to null to
+    | disable the notification entirely — submissions are still recorded in the
+    | database and on disk either way, so nothing is lost.
+    |
+    */
+
+    'submissions_to' => env('MAIL_SUBMISSIONS_TO', 'info@rolica.com'),
+
 ];

@@ -1,155 +1,413 @@
-import { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/react';
-import ApplicationLogo from './ApplicationLogo';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Link, usePage } from '@inertiajs/react';
+import RLMark, { Wordmark } from '@/Components/RLMark';
+import { AlponaWatermark, Lotus } from '@/Components/Ornament';
+import { useLang } from '@/hooks/useLang';
+import { NAV, YOUTUBE_SUBSCRIBE, TAGLINE_BN, TAGLINE_EN } from '@/brand';
 
-export default function Header({ lang = 'bn', setLang, onOpenSubmit }) {
+/**
+ * Header.
+ *
+ * Two states. Over a page's dark hero (`overHero`) the bar is transparent and
+ * everything in it renders light; anywhere else — or past the fold — it is the
+ * solid paper bar with ink type. `onDark` is derived once and drives every
+ * colour decision below, so the two treatments cannot drift apart.
+ *
+ * The scroll listener is rAF-throttled and writes the progress bar via a CSS
+ * custom property rather than React state: progress changes every frame, and
+ * routing that through a re-render would re-reconcile the header ~60 times a
+ * second for one visual value.
+ */
+export default function Header({ onOpenSubmit, overHero = false }) {
+    const { lang, isBn, setLang, t } = useLang();
+    const { url } = usePage();
+
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const progressRef = useRef(null);
+
+    const onHome = url === '/' || url.startsWith('/#') || url.startsWith('/?');
+
+    // Light type over footage, ink type everywhere else.
+    const onDark = overHero && !scrolled && !mobileOpen;
 
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        let frame = null;
+
+        const measure = () => {
+            frame = null;
+            const y = window.scrollY;
+
+            setScrolled(y > 24);
+
+            // Total scrollable distance can be 0 on short pages — guard the
+            // division or the bar gets NaN and never paints.
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const ratio = max > 0 ? Math.min(y / max, 1) : 0;
+            progressRef.current?.style.setProperty('--progress', String(ratio));
+        };
+
+        const onScroll = () => {
+            if (frame === null) frame = requestAnimationFrame(measure);
+        };
+
+        measure();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+            if (frame !== null) cancelAnimationFrame(frame);
+        };
     }, []);
 
-    const navItems = lang === 'bn'
-        ? [
-            { label: 'হোম', href: '/' },
-            { label: 'আমাদের সম্পর্কে', href: '/about' },
-            { label: 'শিল্পী', href: '/artists' },
-            { label: 'বিজয়ী', href: '/winners' },
-            { label: 'ব্লগ', href: '/blog' },
-            { label: 'যোগাযোগ', href: '/contact' },
-        ]
-        : [
-            { label: 'Home', href: '/' },
-            { label: 'About Us', href: '/about' },
-            { label: 'Artists', href: '/artists' },
-            { label: 'Winners', href: '/winners' },
-            { label: 'Blog', href: '/blog' },
-            { label: 'Contact', href: '/contact' },
-        ];
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? 'hidden' : '';
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileOpen]);
 
-    const submitText = lang === 'bn' ? 'প্রতিভা জমা দিন' : 'Submit Your Talent';
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const onKey = (event) => event.key === 'Escape' && setMobileOpen(false);
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [mobileOpen]);
+
+    /** Same-page anchors scroll; from elsewhere the browser follows /#hash. */
+    const goToHash = useCallback(
+        (event, hash) => {
+            setMobileOpen(false);
+            if (!onHome) return;
+
+            const target = document.getElementById(hash);
+            if (!target) return;
+
+            event.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        },
+        [onHome],
+    );
+
+    const handleSubmit = useCallback(() => {
+        setMobileOpen(false);
+        onOpenSubmit?.();
+    }, [onOpenSubmit]);
+
+    // Solid treatment whenever we are not floating over the hero.
+    const solid = scrolled || mobileOpen || !overHero;
+
+    const isActive = (item) => item.href && url.startsWith(item.href);
 
     return (
-        <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                scrolled
-                    ? 'bg-white/95 backdrop-blur-md shadow-lg shadow-black/5 border-b border-black/5'
-                    : 'bg-transparent'
-            }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16 sm:h-20">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        {scrolled ? (
-                            <ApplicationLogo className="h-10 sm:h-12 w-auto" />
-                        ) : (
-                            <ApplicationLogo className="h-10 sm:h-12 w-auto brightness-0 invert opacity-90" />
-                        )}
-                    </Link>
+        <>
+            <header
+                className={`fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-700 ${
+                    solid
+                        ? 'border-b border-brass/15 bg-paper/85 shadow-[0_1px_24px_-12px_rgb(89_68_19_/_0.18)] backdrop-blur-xl'
+                        : 'border-b border-transparent bg-transparent'
+                }`}
+            >
+                <div className="mx-auto max-w-[1560px] px-5 sm:px-8 lg:px-12">
+                    <div className="flex h-20 items-center justify-between gap-6 lg:h-[5.5rem]">
+                        {/* Identity */}
+                        <Link
+                            href="/"
+                            aria-label={`RAW LIQUEUR — ${t('হোম', 'home')}`}
+                            className="group flex shrink-0 items-center gap-3.5"
+                        >
+                            <RLMark
+                                tone={onDark ? 'paper' : 'ink'}
+                                className="h-10 w-10 text-lg lg:h-11 lg:w-11"
+                            />
+                            {/* Tagline is dropped on small screens where it would
+                                wrap or shrink below legibility. */}
+                            <Wordmark
+                                tone={onDark ? 'paper' : 'ink'}
+                                className="hidden xs:flex"
+                                withTagline
+                            />
+                        </Link>
 
-                    <nav className="hidden lg:flex items-center gap-1">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg ${
-                                    scrolled
-                                        ? 'text-[#333] hover:text-[#C41E3A] hover:bg-[#C41E3A]/5'
-                                        : 'text-white/90 hover:text-white hover:bg-white/10'
+                        {/* Primary nav */}
+                        <nav className="hidden items-center gap-9 lg:flex">
+                            {NAV.map((item) => {
+                                const label = item.label[lang];
+                                const active = isActive(item);
+
+                                const classes = `link-underline caps text-[10px] transition-colors duration-500 ${
+                                    active
+                                        ? onDark
+                                            ? 'text-brass-lit'
+                                            : 'text-brass'
+                                        : onDark
+                                          ? 'text-paper/75 hover:text-paper'
+                                          : 'text-ink-soft hover:text-ink'
+                                }`;
+
+                                return item.href ? (
+                                    <Link
+                                        key={item.key}
+                                        href={item.href}
+                                        lang={lang}
+                                        className={classes}
+                                        aria-current={active ? 'page' : undefined}
+                                    >
+                                        {label}
+                                    </Link>
+                                ) : (
+                                    <a
+                                        key={item.key}
+                                        href={`/#${item.hash}`}
+                                        lang={lang}
+                                        onClick={(event) => goToHash(event, item.hash)}
+                                        className={classes}
+                                    >
+                                        {label}
+                                    </a>
+                                );
+                            })}
+                        </nav>
+
+                        {/* Controls */}
+                        <div className="flex shrink-0 items-center gap-3 sm:gap-5">
+                            <LangToggle lang={lang} setLang={setLang} onDark={onDark} />
+
+                            <a
+                                href={YOUTUBE_SUBSCRIBE}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`caps hidden px-5 py-3 text-[9px] transition-colors duration-500 sm:inline-block ${
+                                    onDark
+                                        ? 'border border-paper/40 text-paper hover:bg-paper hover:text-ink'
+                                        : 'border border-brass text-brass hover:bg-brass hover:text-surface'
                                 }`}
                             >
-                                {item.label}
-                            </Link>
-                        ))}
-                    </nav>
+                                {t('সাবস্ক্রাইব', 'Subscribe')}
+                            </a>
 
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
-                            className={`px-3 py-1.5 text-xs font-bold rounded-full border transition-colors ${
-                                scrolled
-                                    ? 'border-[#C41E3A]/30 text-[#C41E3A] hover:bg-[#C41E3A]/5'
-                                    : 'border-white/40 text-white hover:bg-white/10'
-                            }`}
-                        >
-                            {lang === 'bn' ? 'EN' : 'বাং'}
-                        </button>
-
-                        {onOpenSubmit ? (
                             <button
-                                onClick={onOpenSubmit}
-                                className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white text-sm font-semibold rounded-full hover:from-[#D42B4B] hover:to-[#A00000] transition-all shadow-lg shadow-[#C41E3A]/20 hover:shadow-[#C41E3A]/40"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                {submitText}
-                            </button>
-                        ) : (
-                            <Link
-                                href="/submit-talent"
-                                className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white text-sm font-semibold rounded-full hover:from-[#D42B4B] hover:to-[#A00000] transition-all shadow-lg shadow-[#C41E3A]/20 hover:shadow-[#C41E3A]/40"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                {submitText}
-                            </Link>
-                        )}
-
-                        <button
-                            onClick={() => setMobileOpen(!mobileOpen)}
-                            className={`lg:hidden p-2 transition-colors ${
-                                scrolled ? 'text-[#333] hover:text-[#C41E3A]' : 'text-white hover:text-white/80'
-                            }`}
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {mobileOpen ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                type="button"
+                                onClick={() => setMobileOpen((open) => !open)}
+                                aria-label={t(
+                                    mobileOpen ? 'মেনু বন্ধ করুন' : 'মেনু খুলুন',
+                                    mobileOpen ? 'Close menu' : 'Open menu',
                                 )}
-                            </svg>
-                        </button>
+                                aria-expanded={mobileOpen}
+                                className="relative h-6 w-7 lg:hidden"
+                            >
+                                {/* Two hairlines that cross into an X. Kept as
+                                    spans rather than an icon swap so the motion
+                                    between the two states is continuous. */}
+                                <span
+                                    className={`absolute left-0 block h-px w-7 transition-all duration-500 ${
+                                        onDark ? 'bg-paper' : 'bg-ink'
+                                    } ${
+                                        mobileOpen ? 'top-1/2 rotate-45' : 'top-2'
+                                    }`}
+                                />
+                                <span
+                                    className={`absolute left-0 block h-px transition-all duration-500 ${
+                                        onDark ? 'bg-paper' : 'bg-ink'
+                                    } ${
+                                        mobileOpen
+                                            ? 'top-1/2 w-7 -rotate-45'
+                                            : 'top-[15px] w-4'
+                                    }`}
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {mobileOpen && (
-                    <div className="lg:hidden pb-4 border-t border-black/5 mt-2 pt-4 bg-white shadow-xl rounded-b-xl">
-                        <nav className="flex flex-col gap-1">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className="px-4 py-3 text-[#333] hover:text-[#C41E3A] hover:bg-[#C41E3A]/5 rounded-lg transition-colors font-medium"
-                                >
-                                    {item.label}
-                                </Link>
-                            ))}
-                            {onOpenSubmit ? (
-                                <button
-                                    onClick={() => { onOpenSubmit(); setMobileOpen(false); }}
-                                    className="mx-4 mt-3 py-3 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white text-center font-semibold rounded-full"
-                                >
-                                    {submitText}
-                                </button>
-                            ) : (
-                                <Link
-                                    href="/submit-talent"
-                                    onClick={() => setMobileOpen(false)}
-                                    className="mx-4 mt-3 py-3 bg-gradient-to-r from-[#C41E3A] to-[#8B0000] text-white text-center font-semibold rounded-full"
-                                >
-                                    {submitText}
-                                </Link>
-                            )}
-                        </nav>
-                    </div>
-                )}
+                {/* Reading progress — brass hairline filling as you scroll,
+                    driven straight from the scroll handler. */}
+                <div
+                    ref={progressRef}
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 bottom-0 h-px origin-left bg-gradient-to-r from-brass-deep via-brass to-brass-lit transition-opacity duration-700 ${
+                        solid ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{ transform: 'scaleX(var(--progress, 0))' }}
+                />
+            </header>
+
+            <MobileMenu
+                open={mobileOpen}
+                onClose={() => setMobileOpen(false)}
+                onNavigateHash={goToHash}
+                onSubmit={onOpenSubmit ? handleSubmit : null}
+                lang={lang}
+                isBn={isBn}
+                t={t}
+                isActive={isActive}
+            />
+        </>
+    );
+}
+
+/**
+ * LangToggle — segmented বাং / EN control. A visible two-state segment rather
+ * than a single swap button: the brief calls the language switch out as
+ * critical, so English must be discoverable without interacting.
+ */
+function LangToggle({ lang, setLang, onDark = false }) {
+    return (
+        <div
+            className={`flex items-center border transition-colors duration-700 ${
+                onDark ? 'border-paper/30' : 'border-ink/15'
+            }`}
+            role="group"
+            aria-label="Language"
+        >
+            {[
+                { code: 'bn', label: 'বাং' },
+                { code: 'en', label: 'EN' },
+            ].map(({ code, label }) => {
+                const active = lang === code;
+
+                return (
+                    <button
+                        key={code}
+                        type="button"
+                        onClick={() => setLang(code)}
+                        aria-pressed={active}
+                        // Active fill flips with context: paper chip on footage,
+                        // ink chip on paper — either way it stays high-contrast.
+                        className={`caps px-2.5 py-2 text-[9px] transition-colors duration-400 ${
+                            active
+                                ? onDark
+                                    ? 'bg-paper text-ink'
+                                    : 'bg-ink text-paper'
+                                : onDark
+                                  ? 'text-paper/70 hover:text-paper'
+                                  : 'text-ink-soft hover:text-ink'
+                        }`}
+                    >
+                        {label}
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
+/**
+ * MobileMenu — full-bleed overlay rather than a dropdown.
+ *
+ * A collapsing accordion under the bar reads cheap. Taking the whole viewport
+ * lets the nav be set in display type at a size matching the rest of the site.
+ * Stays mounted and animates opacity/visibility so the closing transition can
+ * actually play; unmounting mid-close would cut it off.
+ */
+function MobileMenu({ open, onClose, onNavigateHash, onSubmit, lang, isBn, t, isActive }) {
+    return (
+        <div
+            className={`fixed inset-0 z-40 lg:hidden ${
+                open ? 'visible' : 'invisible'
+            } transition-[visibility] duration-500`}
+            aria-hidden={!open}
+        >
+            <div
+                className={`grain absolute inset-0 bg-paper transition-opacity duration-700 ${
+                    open ? 'opacity-100' : 'opacity-0'
+                }`}
+            >
+                <AlponaWatermark className="-right-24 top-1/4 h-[26rem] w-[26rem] text-brass/[0.12]" />
             </div>
-        </header>
+
+            <nav className="relative flex h-full flex-col justify-center px-7 pb-16 pt-24">
+                {NAV.map((item, index) => {
+                    const label = item.label[lang];
+                    const active = isActive(item);
+
+                    // Stagger down the list. Capped so the last item never lands
+                    // after the overlay has finished fading in.
+                    const style = {
+                        transitionDelay: open ? `${120 + index * 65}ms` : '0ms',
+                    };
+
+                    const classes = `block border-b border-brass/15 py-5 transition-[opacity,transform] duration-700 ${
+                        open ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                    }`;
+
+                    const inner = (
+                        <span className="flex items-baseline justify-between gap-4">
+                            <span
+                                lang={lang}
+                                className={`${isBn ? 'display-bn text-xl' : 'display text-3xl'} ${
+                                    active ? 'text-brass' : 'text-ink'
+                                }`}
+                            >
+                                {label}
+                            </span>
+                            <span className="caps text-[9px] text-ink-mute">
+                                {String(index + 1).padStart(2, '0')}
+                            </span>
+                        </span>
+                    );
+
+                    return item.href ? (
+                        <Link key={item.key} href={item.href} onClick={onClose} style={style} className={classes}>
+                            {inner}
+                        </Link>
+                    ) : (
+                        <a
+                            key={item.key}
+                            href={`/#${item.hash}`}
+                            onClick={(event) => onNavigateHash(event, item.hash)}
+                            style={style}
+                            className={classes}
+                        >
+                            {inner}
+                        </a>
+                    );
+                })}
+
+                <div
+                    className={`mt-12 transition-[opacity,transform] duration-700 ${
+                        open ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                    }`}
+                    style={{ transitionDelay: open ? '460ms' : '0ms' }}
+                >
+                    {/* Pages that own the submit modal open it directly; the rest
+                        send the visitor to the CTA band on the homepage. */}
+                    {onSubmit ? (
+                        <button
+                            type="button"
+                            onClick={onSubmit}
+                            className="caps block w-full bg-crimson py-4 text-center text-[10px] text-surface"
+                        >
+                            {t('প্রতিভা জমা দিন', 'Submit Your Talent')}
+                        </button>
+                    ) : (
+                        <a
+                            href="/#submit"
+                            onClick={onClose}
+                            className="caps block w-full bg-crimson py-4 text-center text-[10px] text-surface"
+                        >
+                            {t('প্রতিভা জমা দিন', 'Submit Your Talent')}
+                        </a>
+                    )}
+
+                    <div className="mt-9 flex items-center justify-center gap-3 text-brass/50">
+                        <span className="rule-brass w-10" />
+                        <Lotus className="h-5 w-5" strokeWidth="1.2" />
+                        <span className="rule-brass w-10" />
+                    </div>
+
+                    <p
+                        lang={lang}
+                        className={`mt-5 text-center text-ink-mute ${
+                            isBn ? 'text-[11px]' : 'caps text-[8px]'
+                        }`}
+                    >
+                        {isBn ? TAGLINE_BN : TAGLINE_EN}
+                    </p>
+                </div>
+            </nav>
+        </div>
     );
 }
