@@ -68,7 +68,7 @@ export default function Home() {
                         গানের মাঝে ফুটে বির থাগসাব সেরা প্রতিভা সবাইকে বেধান, সবাইকে শোনান।
                     </p>
                     <div className="flex gap-4 items-center flex-wrap">
-                        <button className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105">
+                <button className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105">
                             ♫ EXPLORE TALENTS
                         </button>
                         <button className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-white/10 text-white border-[1.5px] border-white/30 backdrop-blur-sm hover:bg-white/20">
@@ -192,18 +192,17 @@ export default function Home() {
             </section>
 
             {/* CTA Banner */}
-            <div className="max-w-[1160px] mx-auto mb-[70px] bg-gradient-to-br from-[#fbe6f1] via-[#f7e3ee] to-[#fdeee2] rounded-[22px] flex items-center justify-between px-[50px] py-9 gap-5 flex-wrap max-[700px]:flex-col max-[700px]:text-center max-[700px]:p-[30px]">
-                <div className="w-[120px] h-[120px] rounded-full bg-gradient-to-br from-purple to-pink flex items-center justify-center text-[44px] shrink-0 shadow-[0_20px_40px_-12px_rgba(139,47,201,.45)] max-[480px]:w-[90px] max-[480px]:h-[90px] max-[480px]:text-[34px]">
-                    🎤
-                </div>
-                <div className="flex-1 min-w-[260px]">
-                    <div className="text-pink text-xs font-bold tracking-[2px] mb-2">BE THE NEXT FEATURED ARTIST</div>
-                    <h3 className="text-[26px] font-bold leading-[1.4] max-[700px]:text-[22px]">
+            <div className="relative max-w-[1160px] mx-auto mb-[70px] rounded-[22px] overflow-hidden flex items-center justify-end px-[50px] py-9 gap-6 max-[700px]:flex-col max-[700px]:text-center max-[700px]:justify-center max-[700px]:p-[30px]">
+                <img src="/images/footer.png" alt="cta" className="absolute inset-0 w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/40" />
+                <div className="relative z-10 text-right max-[700px]:text-center">
+                    <div className="text-white text-xs font-bold tracking-[2px] mb-2">BE THE NEXT FEATURED ARTIST</div>
+                    <h3 className="text-[26px] font-bold leading-[1.4] text-white max-[700px]:text-[22px]">
                         Show us your raw talent.<br />
                         <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">No AI, No Edit, Just You.</span>
                     </h3>
                 </div>
-                <button className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105">
+                <button className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 whitespace-nowrap">
                     &#9733; SUBMIT YOUR TALENT →
                 </button>
             </div>
