@@ -2,18 +2,18 @@ import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 
 const artists = [
-    { name: 'Sneha Chakraborty', loc: 'Bangladesh', role: 'SINGER', uploads: 78, g: 'from-[#5b2a52] to-[#1c0e22]' },
-    { name: 'Arka Dey', loc: 'Kolkata, India', role: 'POET', uploads: 54, g: 'from-[#3a2440] to-[#0c0810]' },
-    { name: 'Ridoy Das', loc: 'Bangladesh', role: 'SINGER', uploads: 42, g: 'from-[#3f4750] to-[#12161a]' },
-    { name: 'Suvo Adhikary', loc: 'Kolkata, India', role: 'MUSICIAN', uploads: 13, g: 'from-[#141414] to-black' },
-    { name: 'Diya Nandy', loc: 'Kolkata, India', role: 'DANCER', uploads: 461, g: 'from-[#3a2018] to-[#160b07]' },
-    { name: 'Iman Sen', loc: 'Bangladesh', role: 'STORYTELLER', uploads: 47, g: 'from-[#5b6270] to-[#1c2027]' },
-    { name: 'Rohan Mitra', loc: 'Kolkata, India', role: 'STORYTELLER', uploads: 38, g: 'from-[#6b4a1c] to-[#241608]' },
-    { name: 'Tania Khatun', loc: 'Bangladesh', role: 'SINGER', uploads: 49, g: 'from-[#7a2436] to-[#220a10]' },
-    { name: 'Aniket Pal', loc: 'Bangladesh', role: 'POET', uploads: 34, g: 'from-[#312a24] to-[#0e0a08]' },
-    { name: 'Moumita Hore', loc: 'Kolkata, India', role: 'SINGER', uploads: 32, g: 'from-[#8c2f3a] to-[#220b0e]' },
-    { name: 'Farhan Ahmed', loc: 'Bangladesh', role: 'MUSICIAN', uploads: 71, g: 'from-[#454545] to-[#0a0a0a]' },
-    { name: 'Priya Sengupta', loc: 'Bangladesh', role: 'DANCER', uploads: 36, g: 'from-[#c98a2e] to-[#3a2408]' },
+    { name: 'Sneha Chakraborty', loc: 'Bangladesh', role: 'SINGER', uploads: 78, g: 'from-[#5b2a52] to-[#1c0e22]', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Arka Dey', loc: 'Kolkata, India', role: 'POET', uploads: 54, g: 'from-[#3a2440] to-[#0c0810]', img: 'https://images.unsplash.com/photo-1508973379184-7517410fb0bc?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Ridoy Das', loc: 'Bangladesh', role: 'SINGER', uploads: 42, g: 'from-[#3f4750] to-[#12161a]', img: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Suvo Adhikary', loc: 'Kolkata, India', role: 'MUSICIAN', uploads: 13, g: 'from-[#141414] to-black', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Diya Nandy', loc: 'Kolkata, India', role: 'DANCER', uploads: 461, g: 'from-[#3a2018] to-[#160b07]', img: 'https://images.unsplash.com/photo-1547153760-18fc86c83137?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Iman Sen', loc: 'Bangladesh', role: 'STORYTELLER', uploads: 47, g: 'from-[#5b6270] to-[#1c2027]', img: 'https://images.unsplash.com/photo-1478147427282-58a87a120781?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Rohan Mitra', loc: 'Kolkata, India', role: 'STORYTELLER', uploads: 38, g: 'from-[#6b4a1c] to-[#241608]', img: 'https://images.unsplash.com/photo-1461784180009-27c1303a64b6?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Tania Khatun', loc: 'Bangladesh', role: 'SINGER', uploads: 49, g: 'from-[#7a2436] to-[#220a10]', img: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Aniket Pal', loc: 'Bangladesh', role: 'POET', uploads: 34, g: 'from-[#312a24] to-[#0e0a08]', img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Moumita Hore', loc: 'Kolkata, India', role: 'SINGER', uploads: 32, g: 'from-[#8c2f3a] to-[#220b0e]', img: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=400&q=80&auto=format&fit=crop' },
+    { name: 'Farhan Ahmed', loc: 'Bangladesh', role: 'MUSICIAN', uploads: 71, g: 'from-[#454545] to-[#0a0a0a]', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop&sat=-100' },
+    { name: 'Priya Sengupta', loc: 'Bangladesh', role: 'DANCER', uploads: 36, g: 'from-[#c98a2e] to-[#3a2408]', img: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=80&auto=format&fit=crop' },
 ];
 
 const badgeColors = {
@@ -126,9 +126,9 @@ export default function Artists() {
                         return (
                             <div key={i} className="bg-white rounded-[14px] overflow-hidden border border-border transition-all hover:-translate-y-1 hover:shadow-[0_16px_30px_rgba(36,24,18,.10)]">
                                 <div className={`relative h-[210px] flex items-center justify-center bg-gradient-to-br ${a.g} overflow-hidden`}>
+                                    <img src={a.img} alt={a.name} className="absolute inset-0 w-full h-full object-cover" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
                                     <span className={`absolute top-3 left-3 z-20 text-[10px] font-bold tracking-[1px] uppercase text-white py-[6px] px-3 rounded-20 ${badgeColors[a.role]}`}>{a.role}</span>
-                                    <RoleIcon />
                                 </div>
                                 <div className="p-4 pb-[18px]">
                                     <h3 className="font-playfair text-[16.5px] font-semibold">{a.name}</h3>
