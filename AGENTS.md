@@ -36,7 +36,7 @@ app/                          # Laravel PHP backend
   Http/Middleware/
     HandleInertiaRequests.php  # Shares auth data to all Inertia pages
   Http/Controllers/
-routes/web.php                 # Routes: / → Home, /about, /artists, /winners, /blog, POST /submit-talent
+routes/web.php                 # Routes: / → Home, /about, /artists, /winners, /blog, /contact, POST /submit-talent
 resources/js/
   app.jsx                      # Inertia entry point (resolves ./Pages/*.jsx)
   bootstrap.js                 # Axios setup
@@ -46,6 +46,7 @@ resources/js/
     Artists.jsx                # Artists grid with filter/search
     Winners.jsx                # Winners hall of fame, seasonal champions
     Blog.jsx                   # Blog with articles, newsletter, sidebar
+    Contact.jsx                # Contact form, FAQ, location info
   Layouts/
     PublicLayout.jsx           # Public site layout (Header + Footer)
   Components/
@@ -84,4 +85,5 @@ resources/js/
 | GET | `/artists` | `Artists.jsx` |
 | GET | `/winners` | `Winners.jsx` |
 | GET | `/blog` | `Blog.jsx` |
+| GET | `/contact` | `Contact.jsx` |
 | POST | `/submit-talent` | `TalentSubmissionController@store` (JSON response) |

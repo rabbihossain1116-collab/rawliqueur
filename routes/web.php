@@ -14,6 +14,8 @@ Route::get('/winners', fn () => Inertia::render('Winners'))->name('winners');
 
 Route::get('/blog', fn () => Inertia::render('Blog'))->name('blog');
 
+Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
+
 Route::post('/submit-talent', [TalentSubmissionController::class, 'store'])
     ->middleware('throttle:6,60')
     ->name('talent.store');
