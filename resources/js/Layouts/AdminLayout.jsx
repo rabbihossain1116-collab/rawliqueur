@@ -32,12 +32,7 @@ export default function AdminLayout({ children, title }) {
                 {/* Logo */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-100">
                     <Link href="/admin" className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ec1e63] to-[#f7941e] flex items-center justify-center">
-                            <span className="text-white font-bold text-lg">R</span>
-                        </div>
-                        {sidebarOpen && (
-                            <span className="font-bold text-[#1a1425] text-lg">RAW LIQUEUR</span>
-                        )}
+                        <img src="/image/rllogo.png" alt="RAW LIQUEUR" className="h-[45px] w-auto" />
                     </Link>
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
