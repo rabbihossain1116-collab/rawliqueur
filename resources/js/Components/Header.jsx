@@ -10,7 +10,7 @@ export default function Header({ onSubmitTalent }) {
         { label: 'About Us', href: '/about' },
         { label: 'Artists', href: '/artists' },
         { label: 'Winners', href: '/winners' },
-        { label: 'Blog', href: '/journal' },
+        { label: 'Blog', href: '/blog' },
         { label: 'Contact', href: '/contact' },
     ];
 
