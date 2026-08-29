@@ -75,29 +75,26 @@ export default function Contact() {
     return (
         <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
             {/* Hero Section */}
-            <section className="relative min-h-[400px] flex items-center bg-ink overflow-hidden">
-                <img src="/images/slider 1.png" alt="Contact Hero" className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/70 to-ink/50" />
-                <div className="relative z-10 max-w-[1240px] mx-auto px-8 py-[80px] max-[700px]:py-[50px] max-[480px]:px-4 w-full">
-                    <div className="flex items-center gap-3 mb-6">
-                        <span className="text-5xl">📬</span>
-                        <span className="text-orange font-bold text-[13px] tracking-[3px] uppercase">Get in Touch</span>
-                    </div>
-                    <h1 className="text-[52px] leading-[1.2] font-bold mb-6 text-white max-[700px]:text-[36px] max-[480px]:text-[28px]">
-                        We'd Love to
-                        <span className="bg-gradient-to-r from-orange via-pink to-purple bg-clip-text text-transparent"> Hear </span>
-                        From You
-                    </h1>
-                    <p className="text-white/70 text-[17px] leading-[1.8] max-w-[520px] mb-10 max-[480px]:text-[15px]">
-                        Have a question, suggestion, or want to collaborate? Reach out to us and we'll get back to you as soon as possible.
-                    </p>
-                    <div className="flex gap-4 flex-wrap">
-                        <a href="#contact-form" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_25px_-6px_rgba(236,30,99,.6)] hover:brightness-110 transition-all">
-                            ✉️ Send a Message
-                        </a>
-                        <a href="#faq" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-white/10 text-white border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all">
-                            ❓ FAQ
-                        </a>
+            <section className="px-8 pt-6 pb-0 max-[600px]:px-4">
+                <div className="max-w-[1180px] mx-auto relative rounded-2xl overflow-hidden min-h-[340px] flex items-center bg-cover bg-center"
+                    style={{ backgroundImage: "url('/images/slider 1.png')" }}>
+                    <div className="absolute inset-0 bg-black/40" />
+                    <div className="absolute right-[6%] bottom-[14%] text-[44px] opacity-85 tracking-[18px] max-[600px]:hidden">📬 ✉️ 📞 🌐</div>
+                    <div className="relative z-10 p-14 max-w-[560px] max-[600px]:p-8">
+                        <div className="flex items-center gap-3 mb-4">
+                            <span className="text-4xl">📬</span>
+                            <span className="text-[#E9C784] font-bold text-[12px] tracking-[3px] uppercase">Get in Touch</span>
+                        </div>
+                        <div className="font-hind text-[34px] font-bold text-white text-shadow-lg mb-1.5 max-[600px]:text-[24px]">We'd Love to Hear</div>
+                        <div className="text-[22px] font-semibold text-[#f3d9a8] max-[600px]:text-[16px]"><span className="text-white">From You</span> — RAW LIQUEUR</div>
+                        <div className="flex gap-4 flex-wrap mt-8">
+                            <a href="#contact-form" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_25px_-6px_rgba(236,30,99,.6)] hover:brightness-110 transition-all">
+                                ✉️ Send a Message
+                            </a>
+                            <a href="#faq" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-white/10 text-white border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all">
+                                ❓ FAQ
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>
