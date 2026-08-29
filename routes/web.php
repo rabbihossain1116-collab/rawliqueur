@@ -19,3 +19,9 @@ Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
 Route::post('/submit-talent', [TalentSubmissionController::class, 'store'])
     ->middleware('throttle:6,60')
     ->name('talent.store');
+
+// Admin routes
+require __DIR__.'/admin.php';
+
+// Auth routes
+require __DIR__.'/auth.php';

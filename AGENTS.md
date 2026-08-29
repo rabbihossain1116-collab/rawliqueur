@@ -37,6 +37,7 @@ app/                          # Laravel PHP backend
     HandleInertiaRequests.php  # Shares auth data to all Inertia pages
   Http/Controllers/
 routes/web.php                 # Routes: / → Home, /about, /artists, /winners, /blog, /contact, POST /submit-talent
+routes/admin.php               # Admin routes: /admin/* (Dashboard, Artists, Talent, Blog, Winners, Contact, Settings)
 resources/js/
   app.jsx                      # Inertia entry point (resolves ./Pages/*.jsx)
   bootstrap.js                 # Axios setup
@@ -87,3 +88,10 @@ resources/js/
 | GET | `/blog` | `Blog.jsx` |
 | GET | `/contact` | `Contact.jsx` |
 | POST | `/submit-talent` | `TalentSubmissionController@store` (JSON response) |
+| GET | `/admin` | `Admin/Dashboard.jsx` |
+| GET | `/admin/artists` | `Admin/Artists.jsx` |
+| GET | `/admin/talent` | `Admin/Talent.jsx` |
+| GET | `/admin/blog` | `Admin/Blog.jsx` |
+| GET | `/admin/winners` | `Admin/Winners.jsx` |
+| GET | `/admin/contact` | `Admin/Contact.jsx` |
+| GET | `/admin/settings` | `Admin/Settings.jsx` |
