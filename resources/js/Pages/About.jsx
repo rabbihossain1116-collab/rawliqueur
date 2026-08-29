@@ -2,15 +2,15 @@ import PublicLayout from '@/Layouts/PublicLayout';
 
 const voicePairs1 = [
     {
-        left: { initials: 'KS', name: 'Kumar Sanu', role: 'Playback Singer', quote: '"সঙ্গীত আমার ভগবানের সেবা নয়, এ আমার প্রাণের ভাষা, মানুষের প্রতি ভালোবাসা।"', dark: true },
-        right: { initials: 'LM', name: 'Lata Mangeshkar', role: 'Playback Singer', quote: '"যতই প্রযুক্তি উন্নত হোক না কেন, সঙ্গীতের মাধুর্য সবসময় হৃদয়ে থেকে হৃদয়ে পৌঁছায়।"', dark: false },
+        left: { image: '/images/kumar-sanu.webp', name: 'Kumar Sanu', role: 'Playback Singer', quote: '"সঙ্গীত আমার ভগবানের সেবা নয়, এ আমার প্রাণের ভাষা, মানুষের প্রতি ভালোবাসা।"' },
+        right: { image: '/images/lata-mangeshkar.webp', name: 'Lata Mangeshkar', role: 'Playback Singer', quote: '"যতই প্রযুক্তি উন্নত হোক না কেন, সঙ্গীতের মাধুর্য সবসময় হৃদয়ে থেকে হৃদয়ে পৌঁছায়।"' },
     },
 ];
 
 const voicePairs2 = [
     {
-        left: { initials: 'HM', name: 'Hemanta Mukhopadhyay', role: 'Singer & Composer', quote: '"সুরের ভুবনে ভালোবাসাই আমার একমাত্র ঠিকানা।"', dark: true },
-        right: { initials: 'JD', name: 'Jibanananda Das', role: 'Poet', quote: '"বাংলার মাটির গন্ধ মিশে আছে আমার কবিতার প্রতিটি শব্দে।"', dark: false },
+        left: { image: '/images/hemant-kumar.webp', name: 'Hemanta Mukhopadhyay', role: 'Singer & Composer', quote: '"সুরের ভুবনে ভালোবাসাই আমার একমাত্র ঠিকানা।"' },
+        right: { image: '/images/jibanananda-das.webp', name: 'Jibanananda Das', role: 'Poet', quote: '"বাংলার মাটির গন্ধ মিশে আছে আমার কবিতার প্রতিটি শব্দে।"' },
     },
 ];
 
@@ -48,25 +48,25 @@ const values = [
 
 function VoicePair({ data }) {
     return (
-        <div className="grid grid-cols-[170px_1fr_1px_1fr_170px] items-center gap-7 bg-white rounded-2xl shadow-[0_20px_40px_-30px_rgba(60,40,20,.25)] overflow-hidden max-[980px]:grid-cols-1 max-[980px]:text-center">
-            <div className={`h-[170px] w-full flex items-center justify-center font-playfair text-[30px] font-semibold ${data.left.dark ? 'bg-gradient-to-br from-[#4a3a30] to-[#1c1512] text-[#e8c98f]' : 'bg-gradient-to-br from-[#dcd3c8] to-[#a89f92] text-[#5a4f42]'}`}>
-                {data.left.initials}
+        <div className="grid grid-cols-[1fr_1fr_1px_1fr_1fr] items-stretch gap-7 bg-white rounded-2xl shadow-[0_20px_40px_-30px_rgba(60,40,20,.25)] overflow-hidden max-[980px]:grid-cols-1 max-[980px]:text-center">
+            <div className="w-full bg-[#1c1512] flex items-center justify-center p-2">
+                <img src={data.left.image} alt={data.left.name} className="max-h-[260px] w-auto object-contain" />
             </div>
-            <div className="py-6 pl-7 max-[980px]:p-6 max-[980px]:text-center">
+            <div className="py-6 pl-7 flex flex-col justify-center max-[980px]:p-6 max-[980px]:text-center">
                 <div className="font-playfair font-semibold text-[19px] mb-0.5">{data.left.name}</div>
                 <div className="text-[11px] tracking-[.1em] uppercase text-orange-deep font-semibold mb-3">{data.left.role}</div>
                 <p className="text-sm text-muted mb-4 leading-[1.7]">{data.left.quote}</p>
-                <span className="text-[11px] font-semibold tracking-[.08em] border border-border rounded-20 py-2 px-[18px] inline-block text-ink">VIEW MORE</span>
+                <span className="text-[11px] font-semibold tracking-[.08em] border border-border rounded-20 py-2 px-[18px] inline-block text-ink w-fit max-[980px]:mx-auto">VIEW MORE</span>
             </div>
-            <div className="w-px h-[70%] bg-border mx-auto max-[980px]:hidden" />
-            <div className="py-6 pr-7 text-right max-[980px]:p-6 max-[980px]:text-center">
+            <div className="w-px bg-border max-[980px]:hidden" />
+            <div className="py-6 pr-7 text-right flex flex-col justify-center max-[980px]:p-6 max-[980px]:text-center">
                 <div className="font-playfair font-semibold text-[19px] mb-0.5">{data.right.name}</div>
                 <div className="text-[11px] tracking-[.1em] uppercase text-orange-deep font-semibold mb-3">{data.right.role}</div>
                 <p className="text-sm text-muted mb-4 leading-[1.7]">{data.right.quote}</p>
-                <span className="text-[11px] font-semibold tracking-[.08em] border border-border rounded-20 py-2 px-[18px] inline-block text-ink max-[980px]:mx-auto">VIEW MORE</span>
+                <span className="text-[11px] font-semibold tracking-[.08em] border border-border rounded-20 py-2 px-[18px] inline-block text-ink max-[980px]:mx-auto ml-auto">VIEW MORE</span>
             </div>
-            <div className={`h-[170px] w-full flex items-center justify-center font-playfair text-[30px] font-semibold ${data.right.dark ? 'bg-gradient-to-br from-[#4a3a30] to-[#1c1512] text-[#e8c98f]' : 'bg-gradient-to-br from-[#dcd3c8] to-[#a89f92] text-[#5a4f42]'}`}>
-                {data.right.initials}
+            <div className="w-full bg-[#dcd3c8] flex items-center justify-center p-2">
+                <img src={data.right.image} alt={data.right.name} className="max-h-[260px] w-auto object-contain" />
             </div>
         </div>
     );
