@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TalentSubmission;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -31,7 +31,7 @@ class TalentSubmissionController extends Controller
 
     private const DURATIONS = ['under1', '1to3', '3to5', 'over5'];
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:120'],
@@ -111,7 +111,10 @@ class TalentSubmissionController extends Controller
 
         $this->notify($submission);
 
-        return back()->with('status', 'talent-submitted');
+        return response()->json([
+            'status' => 'talent-submitted',
+            'message' => 'Your submission has been received successfully.',
+        ], 201);
     }
 
     /**
