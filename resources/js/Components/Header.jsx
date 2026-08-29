@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
-export default function Header() {
+export default function Header({ onSubmitTalent }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const { url } = usePage();
 
@@ -41,12 +41,12 @@ export default function Header() {
                     </ul>
                 </nav>
 
-                <Link
-                    href="/submit-talent"
-                    className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105"
+                <button
+                    onClick={onSubmitTalent}
+                    className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 cursor-pointer"
                 >
                     &#9733; SUBMIT YOUR TALENT
-                </Link>
+                </button>
 
                 <button
                     className="md:hidden flex flex-col gap-[5px] p-1.5 bg-transparent border-none cursor-pointer"
@@ -69,12 +69,12 @@ export default function Header() {
                         {link.label}
                     </Link>
                 ))}
-                <Link
-                    href="/submit-talent"
-                    className="mt-3.5 flex items-center justify-center w-full gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)]"
+                <button
+                    onClick={() => { onSubmitTalent(); setMobileOpen(false); }}
+                    className="mt-3.5 flex items-center justify-center w-full gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] cursor-pointer"
                 >
                     &#9733; SUBMIT YOUR TALENT
-                </Link>
+                </button>
             </div>
         </>
     );

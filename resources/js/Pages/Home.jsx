@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import TalentForm from '@/Components/TalentForm';
 
 const talents = [
     { rank: '01', name: 'Moha Jadu', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '380K', videoId: 'UghMf59vDJM', variant: '' },
@@ -65,9 +66,10 @@ function VideoModal({ videoId, onClose }) {
 export default function Home() {
     const [activeFilter, setActiveFilter] = useState('All');
     const [modalVideoId, setModalVideoId] = useState(null);
+    const [showTalentForm, setShowTalentForm] = useState(false);
 
     return (
-        <PublicLayout>
+        <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
             {/* Hero */}
             <section className="relative min-h-[600px] flex items-center max-[700px]:min-h-[350px]">
                 <img src="/images/slider%201.png" alt="hero" className="absolute inset-0 w-full h-full object-cover object-center" />
@@ -232,12 +234,13 @@ export default function Home() {
                         <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">No AI, No Edit, Just You.</span>
                     </h3>
                 </div>
-                <button className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 whitespace-nowrap">
+                <button onClick={() => setShowTalentForm(true)} className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 whitespace-nowrap cursor-pointer">
                     &#9733; SUBMIT YOUR TALENT →
                 </button>
             </div>
 
             {modalVideoId && <VideoModal videoId={modalVideoId} onClose={() => setModalVideoId(null)} />}
+            {showTalentForm && <TalentForm onClose={() => setShowTalentForm(false)} />}
         </PublicLayout>
     );
 }
