@@ -81,9 +81,9 @@ export default function Artists() {
         <PublicLayout>
             {/* Hero */}
             <section className="max-w-[1180px] mx-auto mt-[22px] px-8 max-[600px]:px-4">
-                <div className="relative rounded-2xl overflow-hidden h-[400px]"
-                    style={{ background: 'linear-gradient(180deg, rgba(30,16,10,.15) 0%, rgba(20,10,6,.55) 68%, rgba(15,8,5,.78) 100%), radial-gradient(120% 90% at 20% 15%, #E8A15C 0%, transparent 55%), radial-gradient(90% 90% at 85% 20%, #6b5a45 0%, transparent 60%), linear-gradient(120deg,#3b2a20,#1c130d 60%, #120b08)' }}>
-                    <div className="absolute inset-0 opacity-55 mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(circle at 12% 78%, rgba(255,255,255,.10) 0 40px, transparent 42px), repeating-linear-gradient(115deg, rgba(255,255,255,.03) 0 2px, transparent 2px 26px)' }} />
+                <div className="relative rounded-2xl overflow-hidden h-[400px] bg-cover bg-center"
+                    style={{ backgroundImage: "url('/images/Artist.png')" }}>
+                    <div className="absolute inset-0 bg-black/40" />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-5">
                         <div className="font-hind text-[34px] font-semibold text-[#E9C784] tracking-[1px] text-shadow-lg max-[560px]:text-[24px]">সম্মানে ও ইতিহাসে</div>
                         <div className="w-[210px] h-px bg-gradient-to-r from-transparent via-[#E9C784] to-transparent my-4" />
