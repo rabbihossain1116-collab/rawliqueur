@@ -218,19 +218,36 @@ export default function TalentForm({ onClose }) {
                             </div>
                             <div className="text-xs text-[#8a7f6c]">অনুগ্রহ করে শর্তাবলী পড়ুন</div>
                         </div>
+
+                        <div className="text-[13px] text-[#5b5142] leading-[1.8] mb-4 p-3.5 bg-[#fdfaf3] border border-[#e9dfc9] rounded-xl">
+                            RAW LIQUEUR-এ আপনার প্রতিভা জমা দেওয়ার জন্য আপনাকে ধন্যবাদ। RAW LIQUEUR একটি authentic talent platform, যেখানে আমরা মানুষের স্বাভাবিক প্রতিভা, কণ্ঠ, সৃজনশীলতা এবং পারফরম্যান্স কোনো অপ্রয়োজনীয় artificial enhancement ছাড়াই তুলে ধরতে চাই। ভিডিও Submit করার আগে নিচের সকল নিয়ম ও শর্ত ভালোভাবে পড়ে সম্মতি প্রদান করুন।
+                        </div>
+
+                        <div className="text-[14px] font-bold text-[#1b1410] mb-3">Recording Requirements</div>
                         {[
-                            'Artist Must Remain in Frame — ভিডিও ধারণের পুরো সময় artist-এর camera frame-এ থাকতে হবে।',
-                            'Single Continuous Shot — ভিডিওটি একটি নিরবচ্ছিন্ন শটে (কাট ছাড়া) হতে হবে।',
-                            'Performance Rules — বাদ্যযন্ত্র ব্যবহার করলে তা camera frame-এ থাকতে হবে এবং focus থাকতে হবে মূল পরিবেশনার উপর।',
-                            'Unnecessary Activities — ভিডিওতে অপ্রাসঙ্গিক কথা, অপ্রাসঙ্গিক কাজ বা অন্য কোনো unrelated activity প্রযোজ্য নয়।',
-                            'Original Performance — জমা দেওয়া performance অবশ্যই artist-এর নিজস্ব হতে হবে।',
-                            'Safety — রেকর্ডিংয়ের সময় কোনো বিপজ্জনক stunt বা unsafe activity করা যাবে না।',
+                            'Fixed Camera Position — ভিডিও ধারণের সময় মোবাইল ফোন বা recording device অবশ্যই একটি স্থির অবস্থানে রাখতে হবে। হাতে ধরে বা বারবার camera position পরিবর্তন করে ভিডিও ধারণ করা যাবে না।',
+                            'Artist Must Remain in Frame — ভিডিও ধারণের পুরো সময় artist-কে camera frame-এর মধ্যে থাকতে হবে। পারফরম্যান্সের মাঝখানে camera frame-এর বাইরে চলে যাওয়া গ্রহণযোগ্য হবে না।',
+                            'Single Continuous Shot — Single Continuous Shot.',
                         ].map((term, i) => (
-                            <div key={i} className={`flex items-start gap-3 py-3 px-4 border-[1.4px] border-[#e9dfc9] rounded-xl bg-[#fdfaf3] ${i === 5 ? 'mb-3' : 'mb-2.5'}`}>
+                            <div key={i} className="flex items-start gap-3 py-3 px-4 border-[1.4px] border-[#e9dfc9] rounded-xl bg-[#fdfaf3] mb-2.5">
                                 <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">✓</div>
-                                <div className="text-[13px] leading-[1.7]"><strong className="text-[#1b1410]">{term.split(' — ')[0]}</strong> — {term.split(' — ')[1]}</div>
+                                <div className="text-[13px] leading-[1.7]"><strong className="text-[#1b1410]">{term.split(' — ')[0]}</strong> — {term.split(' — ').slice(1).join(' — ')}</div>
                             </div>
                         ))}
+
+                        <div className="text-[14px] font-bold text-[#1b1410] mb-3 mt-4">Performance Rules</div>
+                        {[
+                            'Instrument Must Remain Visible — কোনো manual/acoustic instrument ব্যবহার করলে সেটি যতটা সম্ভব camera frame এবং focus-এর মধ্যে পরিষ্কারভাবে দৃশ্যমান থাকতে হবে। Instrument এমনভাবে ব্যবহার করা যাবে না যাতে বোঝা না যায় যে এটি artist নিজে live ভাবে বাজাচ্ছেন।',
+                            'Unnecessary Activities — ভিডিওর মধ্যে কোনো ধরনের অপ্রয়োজনীয় conversation বা activity গ্রহণযোগ্য হবে না।',
+                            'Original Performance — Submitted performance অবশ্যই submit করা artist-এর নিজস্ব performance হতে হবে।',
+                            'Safety — Artist নিজের recording environment এবং performance-এর নিরাপত্তার জন্য নিজেই দায়ী থাকবেন। কোনো বিপজ্জনক stunt, unsafe activity বা নিজের/অন্যের ক্ষতি হতে পারে এমন performance Submit করা উচিত নয়।',
+                        ].map((term, i) => (
+                            <div key={i} className={`flex items-start gap-3 py-3 px-4 border-[1.4px] border-[#e9dfc9] rounded-xl bg-[#fdfaf3] ${i === 3 ? 'mb-3' : 'mb-2.5'}`}>
+                                <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">✓</div>
+                                <div className="text-[13px] leading-[1.7]"><strong className="text-[#1b1410]">{term.split(' — ')[0]}</strong> — {term.split(' — ').slice(1).join(' — ')}</div>
+                            </div>
+                        ))}
+
                         <div onClick={() => setForm({ ...form, consentTerms: !form.consentTerms })} className={`flex items-start gap-3 p-3.5 border-[1.4px] rounded-xl mt-3 cursor-pointer ${form.consentTerms ? 'border-[#c8944f] bg-[#f1dcb2]' : 'border-[#e9dfc9] bg-[#fdfaf3]'}`}>
                             <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">{form.consentTerms ? '✓' : ''}</div>
                             <div>
