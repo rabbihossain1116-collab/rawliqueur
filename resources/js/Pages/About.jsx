@@ -93,9 +93,9 @@ export default function About() {
         <PublicLayout>
             {/* Hero */}
             <section className="px-8 pt-6 pb-0 max-[600px]:px-4">
-                <div className="max-w-[1180px] mx-auto relative rounded-2xl overflow-hidden min-h-[340px] flex items-center"
-                    style={{ background: 'linear-gradient(100deg, rgba(30,20,10,.55) 0%, rgba(30,20,10,.15) 45%, rgba(30,20,10,0) 65%), linear-gradient(200deg,#e8c58c,#d99a5c 40%, #8a5a3a 75%, #4d3626)' }}>
-                    <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 78% 30%, rgba(255,255,255,.12), transparent 45%), linear-gradient(0deg, rgba(20,12,6,.35), rgba(20,12,6,0) 55%)' }} />
+                <div className="max-w-[1180px] mx-auto relative rounded-2xl overflow-hidden min-h-[340px] flex items-center bg-cover bg-center"
+                    style={{ backgroundImage: "url('/images/aboutuse.png')" }}>
+                    <div className="absolute inset-0 bg-black/40" />
                     <div className="absolute right-[6%] bottom-[14%] text-[44px] opacity-85 tracking-[18px] max-[600px]:hidden">🎻 🪕 🎤 📿</div>
                     <div className="relative z-10 p-14 max-w-[560px] max-[600px]:p-8">
                         <div className="font-hind text-[34px] font-bold text-white text-shadow-lg mb-1.5 max-[600px]:text-[24px]">প্রতিভা ও কবিতা গানে</div>
