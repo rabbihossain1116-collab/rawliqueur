@@ -19,8 +19,8 @@ const categories = [
 
 const videos = [
     { tag: 'Singing', title: 'Sa Re Ga Ma Pa 2025 | Ep 53 Best Scene', by: 'Priya Sengupta', dur: '04:55', views: '6.2M', likes: '540000', videoId: 'qz38Kthnxfo' },
-    { tag: 'Singing', title: 'Zindagi Ke Safar Mein | Indian Idol 16', by: 'Moumita Bose', dur: '04:05', views: '15.2K', likes: '1480', videoId: '2ay9OPlY38A' },
-    { tag: 'Singing', title: 'Baharon Phool Barsao | Indian Idol S16', by: 'Tania Khatun', dur: '03:40', views: '18.5K', likes: '1750', videoId: 'v_TG2YnaavU' },
+    { tag: 'Singing', title: 'Kishore Kumar Special | Jyotirmayee Nayak | Indian Idol S16', by: 'Jyotirmayee Nayak', dur: '04:05', views: '12K', likes: '1800', videoId: 'lIfJ0nngD68' },
+    { tag: 'Singing', title: 'Kehna Hai Kehna Hai | Tanishk Shukla | Indian Idol S16', by: 'Tanishk Shukla', dur: '03:40', views: '16K', likes: '2100', videoId: 'pMhjxMwY9W0' },
     { tag: 'Singing', title: 'Kah Doon Tumhe Ya Chup Rahun | Indian Idol S16', by: 'Sneha Chakraborty', dur: '03:50', views: '24.9K', likes: '2020', videoId: 'NHDYwhfJGzk' },
     { tag: 'Singing', title: 'Ae Ajnabee | Coke Studio Bharat', by: 'Arka Dey', dur: '04:15', views: '18M', likes: '1650000', videoId: 'ut1rfURWyCo' },
     { tag: 'Singing', title: 'Re Mann | Coke Studio Bharat', by: 'Ridoy Das', dur: '04:30', views: '22M', likes: '1850000', videoId: 'gxet54MhNQI' },
@@ -43,8 +43,28 @@ const stats = [
 
 const filterPills = ['All', 'Singing', 'Dance', 'Storytelling', 'Poetry', 'Instrumental'];
 
+function VideoModal({ videoId, onClose }) {
+    return (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-4" onClick={onClose}>
+            <div className="relative w-full max-w-[900px]" onClick={(e) => e.stopPropagation()}>
+                <button onClick={onClose} className="absolute -top-10 right-0 text-white text-3xl cursor-pointer hover:text-pink">✕</button>
+                <div className="relative w-full h-0 pb-[56.25%] rounded-xl overflow-hidden">
+                    <iframe
+                        className="absolute inset-0 w-full h-full"
+                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+                        title="Video Player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function Home() {
     const [activeFilter, setActiveFilter] = useState('All');
+    const [modalVideoId, setModalVideoId] = useState(null);
 
     return (
         <PublicLayout>
@@ -97,21 +117,23 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-3 gap-6 max-w-[1160px] mx-auto px-8 max-[980px]:grid-cols-2 max-[700px]:grid-cols-1 max-[980px]:px-5">
                     {talents.map((t, i) => (
-                        <div key={i} className="relative rounded-2xl overflow-hidden bg-black">
-                            <div className="relative w-full h-0 pb-[56.25%]">
-                                <iframe
-                                    className="absolute inset-0 w-full h-full"
-                                    src={`https://www.youtube.com/embed/${t.videoId}`}
-                                    title={t.name}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                />
+                        <div key={i} className="relative rounded-2xl overflow-hidden bg-black cursor-pointer group" style={{ height: '420px' }} onClick={() => setModalVideoId(t.videoId)}>
+                            <img
+                                src={`https://img.youtube.com/vi/${t.videoId}/maxresdefault.jpg`}
+                                alt={t.name}
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none flex items-center justify-center">
+                                <span className="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center text-ink text-2xl shadow-lg">▶</span>
                             </div>
-                            <div className="relative z-10 p-[18px] w-full bg-gradient-to-b from-[rgba(15,5,20,.1)] to-[rgba(15,5,20,.9)] text-white">
-                                <span className="absolute top-[-68px] left-3.5 bg-gradient-to-r from-orange to-pink text-white font-bold text-[13px] py-[5px] px-3 rounded-lg z-10">{t.rank}</span>
+                            <div className="absolute top-4 left-4 z-20">
+                                <span className="bg-gradient-to-r from-orange to-pink text-white font-bold text-[13px] py-[5px] px-3 rounded-lg">{t.rank}</span>
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 z-20 p-[18px]">
                                 <span className={`inline-block text-[10px] font-bold py-[3px] px-2.5 rounded-[5px] mb-2 uppercase tracking-[.5px] ${t.variant === 'dance' ? 'bg-purple' : 'bg-pink'}`}>{t.type}</span>
-                                <h3 className="text-[19px] mb-1">{t.name}</h3>
-                                <p className="text-[12.5px] opacity-85 mb-2.5">{t.desc}</p>
+                                <h3 className="text-[19px] mb-1 text-white font-semibold">{t.name}</h3>
+                                <p className="text-[12.5px] opacity-85 mb-2.5 text-white">{t.desc}</p>
                                 <span className="inline-flex items-center gap-1.5 bg-[rgba(255,255,255,.9)] text-pink text-[11px] font-bold py-1 px-2.5 rounded-full">♥ {t.likes}</span>
                             </div>
                         </div>
@@ -168,16 +190,19 @@ export default function Home() {
 
                 <div className="grid grid-cols-5 gap-[18px] max-w-[1160px] mx-auto px-8 max-[1080px]:grid-cols-3 max-[980px]:grid-cols-3 max-[700px]:grid-cols-2 max-[480px]:grid-cols-2 max-[980px]:px-5 max-[480px]:gap-3">
                     {videos.map((v, i) => (
-                        <div key={i} className="cursor-pointer">
+                        <div key={i} className="cursor-pointer group" onClick={() => setModalVideoId(v.videoId)}>
                             <div className="relative rounded-xl overflow-hidden mb-2.5">
                                 <div className="relative w-full h-0 pb-[56.25%]">
-                                    <iframe
-                                        className="absolute inset-0 w-full h-full"
-                                        src={`https://www.youtube.com/embed/${v.videoId}`}
-                                        title={v.title}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
+                                    <img
+                                        src={`https://img.youtube.com/vi/${v.videoId}/mqdefault.jpg`}
+                                        alt={v.title}
+                                        className="absolute inset-0 w-full h-full object-cover"
                                     />
+                                    <span className="absolute top-2 left-2 bg-pink text-white text-[9px] font-bold py-[3px] px-2 rounded-[5px] uppercase tracking-[.4px] z-10">{v.tag}</span>
+                                    <span className="absolute bottom-2 right-2 bg-[rgba(0,0,0,.65)] text-white text-[10px] py-[2px] px-[7px] rounded-[5px] z-10">{v.dur}</span>
+                                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span className="w-[38px] h-[38px] rounded-full bg-white/90 flex items-center justify-center text-ink text-[13px] shadow-lg">▶</span>
+                                    </div>
                                 </div>
                             </div>
                             <h4 className="text-[13.5px] font-semibold mb-1.5 leading-[1.4] max-[480px]:text-[12.5px]">{v.title}</h4>
@@ -211,6 +236,8 @@ export default function Home() {
                     &#9733; SUBMIT YOUR TALENT →
                 </button>
             </div>
+
+            {modalVideoId && <VideoModal videoId={modalVideoId} onClose={() => setModalVideoId(null)} />}
         </PublicLayout>
     );
 }
