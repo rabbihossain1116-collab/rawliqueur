@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import TalentForm from '@/Components/TalentForm';
 import { Link } from '@inertiajs/react';
 
 export default function Contact({ contactContent }) {
@@ -253,6 +254,7 @@ export default function Contact({ contactContent }) {
                     </div>
                 </div>
             </section>
+            {showTalentForm && <TalentForm onClose={() => setShowTalentForm(false)} />}
         </PublicLayout>
     );
 }

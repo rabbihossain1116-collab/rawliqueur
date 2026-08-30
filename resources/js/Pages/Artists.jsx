@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import TalentForm from '@/Components/TalentForm';
 
 const badgeColors = {
     SINGER: 'bg-[#8C2233]',
@@ -61,6 +62,7 @@ const roleIcons = { SINGER: SingerIcon, POET: PoetIcon, MUSICIAN: MusicianIcon, 
 
 export default function Artists({ artistsContent }) {
     const [activeFilter, setActiveFilter] = useState('All');
+    const [showTalentForm, setShowTalentForm] = useState(false);
 
     const hero = artistsContent?.hero || {
         bgImage: '/images/Artist.png',
@@ -91,7 +93,7 @@ export default function Artists({ artistsContent }) {
     };
 
     return (
-        <PublicLayout>
+        <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
             {/* Hero */}
             <section className="max-w-[1180px] mx-auto mt-[22px] px-8 max-[600px]:px-4">
                 <div className="relative rounded-2xl overflow-hidden h-[400px] bg-cover bg-center"
@@ -184,6 +186,7 @@ export default function Artists({ artistsContent }) {
                     <button className="inline-flex items-center gap-2 bg-gradient-to-r from-orange to-pink text-white font-semibold text-[13.5px] py-3 px-[22px] rounded-30 border-none cursor-pointer shadow-[0_8px_18px_rgba(236,30,99,.35)] hover:-translate-y-0.5 transition-all whitespace-nowrap relative z-10 flex-none">{cta.buttonText}</button>
                 </div>
             </section>
+            {showTalentForm && <TalentForm onClose={() => setShowTalentForm(false)} />}
         </PublicLayout>
     );
 }

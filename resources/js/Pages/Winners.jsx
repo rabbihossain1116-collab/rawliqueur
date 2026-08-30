@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import TalentForm from '@/Components/TalentForm';
 import { Link } from '@inertiajs/react';
 
 function VideoModal({ videoId, onClose }) {
@@ -208,6 +209,7 @@ export default function Winners({ winnersContent }) {
             </section>
 
             {modalVideoId && <VideoModal videoId={modalVideoId} onClose={() => setModalVideoId(null)} />}
+            {showTalentForm && <TalentForm onClose={() => setShowTalentForm(false)} />}
         </PublicLayout>
     );
 }

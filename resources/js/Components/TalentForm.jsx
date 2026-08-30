@@ -2,22 +2,111 @@ import { useState } from 'react';
 
 export default function TalentForm({ onClose }) {
     const [form, setForm] = useState({
-        name: '', age: '', gender: 'পুরুষ', address: '', phone: '',
-        talentType: '', isRaw: 'হ্যাঁ', duration: '', photo: null, video: null,
-        consentContent: false, consentCommercial: false, consentTerms: false,
+        name: '', age: '', gender: 'পুরুষ', district: '', division: '', phone: '', email: '',
+        talentType: '', performanceTitle: '', note: '', isRaw: 'হ্যাঁ', duration: '',
+        photo: null, video: null,
+        consentContent: false, consentCommercial: false, consentTerms: false, consentFuture: false,
     });
 
     const [dragOver, setDragOver] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
 
     const handlePillClick = (field, value) => {
         setForm(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        alert('Thanks! Your talent has been submitted. We will review it soon.');
-        onClose();
+    const validate = () => {
+        const errs = {};
+        if (!form.name || form.name.length < 2) errs.name = 'নাম কমপক্ষে ২ অক্ষর হতে হবে';
+        if (!form.age || parseInt(form.age) < 5 || parseInt(form.age) > 100) errs.age = 'সঠিক বয়স দিন (৫-১০০)';
+        if (!form.phone || !/^(?:\+?880|0)1[3-9]\d{8}$/.test(form.phone)) errs.phone = 'সঠিক মোবাইল নম্বর দিন';
+        if (!form.district) errs.district = 'জেলা নির্বাচন করুন';
+        if (!form.division) errs.division = 'বিভাগ নির্বাচন করুন';
+        if (!form.talentType) errs.talentType = 'প্রতিভার ধরন নির্বাচন করুন';
+        if (!form.isRaw) errs.isRaw = 'ভিডিও RAW কিনা নির্বাচন করুন';
+        if (!form.duration) errs.duration = 'ভিডিওর দৈর্ঘ্য নির্বাচন করুন';
+        if (!form.consentContent) errs.consentContent = 'কনটেন্টের অনুমতি দিন';
+        if (!form.consentCommercial) errs.consentCommercial = 'বাণিজ্যিক অনুমতি দিন';
+        if (!form.consentTerms) errs.consentTerms = 'শর্তাবলীতে সম্মতি দিন';
+        if (!form.photo) errs.photo = 'ছবি আপলোড করুন';
+        if (!form.video) errs.video = 'ভিডিও আপলোড করুন';
+        setErrors(errs);
+        return Object.keys(errs).length === 0;
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!validate()) return;
+
+        setSubmitting(true);
+        try {
+            const formData = new FormData();
+            formData.append('name', form.name);
+            formData.append('age', form.age);
+            formData.append('gender', form.gender === 'পুরুষ' ? 'male' : 'female');
+            formData.append('division', form.division);
+            formData.append('district', form.district);
+            formData.append('phone', form.phone);
+            formData.append('email', form.email || '');
+            formData.append('talentType', form.talentType);
+            formData.append('performanceTitle', form.performanceTitle || '');
+            formData.append('note', form.note || '');
+            formData.append('isRaw', '1');
+            formData.append('duration', form.duration);
+            formData.append('consentPublish', '1');
+            formData.append('consentTerms', '1');
+            formData.append('consentFuture', form.consentFuture ? '1' : '0');
+            formData.append('language', 'bn');
+            if (form.photo) formData.append('photo', form.photo);
+            if (form.video) formData.append('video', form.video);
+
+            const response = await fetch('/submit-talent', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                setSubmitted(true);
+            } else {
+                const result = await response.json();
+                if (result.errors) {
+                    setErrors(result.errors);
+                }
+            }
+        } catch (error) {
+            console.error('Submit failed:', error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const divisions = ['ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ'];
+
+    if (submitted) {
+        return (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-4" onClick={onClose}>
+                <div className="bg-white rounded-3xl p-10 max-w-[480px] w-full text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 className="font-playfair text-[28px] font-bold text-[#1b1410] mb-3">ধন্যবাদ!</h2>
+                    <p className="text-[#5b5142] text-[15px] leading-[1.8] mb-2">আপনার প্রতিভা সফলভাবে জমা হয়েছে।</p>
+                    <p className="text-[#8a7f6c] text-[13px] leading-[1.7] mb-8">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।</p>
+                    <button onClick={onClose} className="w-full py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-lg hover:brightness-110 transition-all cursor-pointer">
+                        বন্ধ করুন
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-start justify-center z-[9999] overflow-y-auto py-6 px-4" onClick={onClose}>
@@ -81,37 +170,62 @@ export default function TalentForm({ onClose }) {
                                     <span className="text-[#a97536] text-sm w-4 text-center flex-none">👤</span>
                                     <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="আপনার পূর্ণ নাম লিখুন" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                                 </div>
+                                {errors.name && <p className="text-red-500 text-[11px] mt-1">{errors.name}</p>}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">আপনার বয়স <span className="text-[#c65b6e]">*</span></label>
                                 <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
                                     <span className="text-[#a97536] text-sm w-4 text-center flex-none">📅</span>
-                                    <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="যেমন: 24" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} />
+                                    <input type="number" className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="যেমন: 24" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} />
                                 </div>
+                                {errors.age && <p className="text-red-500 text-[11px] mt-1">{errors.age}</p>}
                             </div>
                         </div>
                         <div className="mb-4">
                             <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">আপনি কোন জেন্ডার? <span className="text-[#c65b6e]">*</span></label>
                             <div className="flex flex-wrap gap-2.5">
-                                {['পুরুষ', 'মহিলা'].map(g => (
+                                {['পুরুষ', 'মহিলা', 'অন্যান্য'].map(g => (
                                     <div key={g} onClick={() => handlePillClick('gender', g)} className={`flex items-center gap-2 border-[1.4px] rounded-[11px] py-2.5 px-4 text-[13px] font-semibold cursor-pointer select-none whitespace-nowrap ${form.gender === g ? 'bg-[#f1dcb2] border-[#c8944f] text-[#a97536]' : 'border-[#e9dfc9] text-[#4a4030] bg-[#fdfaf3]'}`}>
-                                        <span className="text-sm">{g === 'পুরুষ' ? '♂' : '♀'}</span> {g}
+                                        <span className="text-sm">{g === 'পুরুষ' ? '♂' : g === 'মহিলা' ? '♀' : '⚧'}</span> {g}
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">আপনার বর্তমান ঠিকানা</label>
-                            <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
-                                <span className="text-[#a97536] text-sm w-4 text-center flex-none">📍</span>
-                                <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="ঠিকানা লিখুন" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+                        <div className="grid grid-cols-2 gap-4 max-[700px]:grid-cols-1">
+                            <div className="mb-4">
+                                <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">বিভাগ <span className="text-[#c65b6e]">*</span></label>
+                                <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
+                                    <select value={form.division} onChange={(e) => setForm({ ...form, division: e.target.value })} className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 cursor-pointer">
+                                        <option value="">বিভাগ নির্বাচন করুন</option>
+                                        {divisions.map(d => <option key={d} value={d}>{d}</option>)}
+                                    </select>
+                                </div>
+                                {errors.division && <p className="text-red-500 text-[11px] mt-1">{errors.division}</p>}
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">জেলা <span className="text-[#c65b6e]">*</span></label>
+                                <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
+                                    <span className="text-[#a97536] text-sm w-4 text-center flex-none">📍</span>
+                                    <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="জেলা লিখুন" value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} />
+                                </div>
+                                {errors.district && <p className="text-red-500 text-[11px] mt-1">{errors.district}</p>}
                             </div>
                         </div>
-                        <div className="mb-0">
-                            <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">মোবাইল নম্বর / WhatsApp <span className="text-[#c65b6e]">*</span></label>
-                            <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
-                                <span className="text-[#a97536] text-sm w-4 text-center flex-none">📱</span>
-                                <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="+880 1XXX-XXXXXX" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                        <div className="grid grid-cols-2 gap-4 max-[700px]:grid-cols-1">
+                            <div className="mb-4">
+                                <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">মোবাইল নম্বর / WhatsApp <span className="text-[#c65b6e]">*</span></label>
+                                <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
+                                    <span className="text-[#a97536] text-sm w-4 text-center flex-none">📱</span>
+                                    <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="+880 1XXXXXXXXX" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                                </div>
+                                {errors.phone && <p className="text-red-500 text-[11px] mt-1">{errors.phone}</p>}
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">ইমেইল (ঐচ্ছিক)</label>
+                                <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
+                                    <span className="text-[#a97536] text-sm w-4 text-center flex-none">✉️</span>
+                                    <input type="email" className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="email@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -128,17 +242,25 @@ export default function TalentForm({ onClose }) {
                             </div>
                             <div className="text-xs text-[#8a7f6c]">আপনার প্রতিভা সম্পর্কে জানান</div>
                         </div>
-                        <div className="mb-0">
+                        <div className="mb-4">
                             <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">আপনি কোন ধরনের প্রতিভা প্রদর্শন করবেন? <span className="text-[#c65b6e]">*</span></label>
                             <div className="flex flex-wrap gap-2.5">
                                 {[
                                     { icon: '🎵', label: 'গান' }, { icon: '💃', label: 'নাচ' }, { icon: '📖', label: 'কবিতা' },
-                                    { icon: '🎤', label: 'কথকতা' }, { icon: '🎭', label: 'অভিনয়' }, { icon: '⋯', label: 'অন্যান্য' },
+                                    { icon: '🎤', label: 'কথকতা' }, { icon: '🎭', label: 'অভিনয়' }, { icon: '🎵', label: 'বাদ্যযন্ত্র' }, { icon: '⋯', label: 'অন্যান্য' },
                                 ].map(t => (
                                     <div key={t.label} onClick={() => handlePillClick('talentType', t.label)} className={`flex items-center gap-2 border-[1.4px] rounded-[11px] py-2.5 px-4 text-[13px] font-semibold cursor-pointer select-none whitespace-nowrap ${form.talentType === t.label ? 'bg-[#f1dcb2] border-[#c8944f] text-[#a97536]' : 'border-[#e9dfc9] text-[#4a4030] bg-[#fdfaf3]'}`}>
                                         <span className="text-sm">{t.icon}</span> {t.label}
                                     </div>
                                 ))}
+                            </div>
+                            {errors.talentType && <p className="text-red-500 text-[11px] mt-1">{errors.talentType}</p>}
+                        </div>
+                        <div className="mb-0">
+                            <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">পারফরম্যান্সের শিরোনাম (ঐচ্ছিক)</label>
+                            <div className="flex items-center gap-2.5 border-[1.4px] border-[#e9dfc9] rounded-[11px] py-[11px] px-3.5 bg-[#fdfaf3] focus-within:border-[#c8944f]">
+                                <span className="text-[#a97536] text-sm w-4 text-center flex-none">📝</span>
+                                <input className="border-none outline-none bg-transparent font-hind text-sm w-full text-[#1b1410] min-w-0 placeholder:text-[#b3a68c]" placeholder="গানের/পারফরম্যান্সের নাম" value={form.performanceTitle} onChange={(e) => setForm({ ...form, performanceTitle: e.target.value })} />
                             </div>
                         </div>
                     </section>
@@ -165,16 +287,23 @@ export default function TalentForm({ onClose }) {
                                     </div>
                                 ))}
                             </div>
+                            {errors.isRaw && <p className="text-red-500 text-[11px] mt-1">{errors.isRaw}</p>}
                         </div>
                         <div className="mb-0">
                             <label className="block text-[13.5px] font-semibold mb-2 text-[#3b3327]">ভিডিওর দৈর্ঘ্য <span className="text-[#c65b6e]">*</span></label>
                             <div className="flex flex-wrap gap-2.5">
-                                {['১ মিনিটের নিচে', '১–৩ মিনিট', '৩–৫ মিনিট', '৫ মিনিটের বেশি'].map(d => (
-                                    <div key={d} onClick={() => handlePillClick('duration', d)} className={`flex items-center gap-2 border-[1.4px] rounded-[11px] py-2.5 px-4 text-[13px] font-semibold cursor-pointer select-none whitespace-nowrap ${form.duration === d ? 'bg-[#f1dcb2] border-[#c8944f] text-[#a97536]' : 'border-[#e9dfc9] text-[#4a4030] bg-[#fdfaf3]'}`}>
-                                        <span className="text-sm">⏱</span> {d}
+                                {[
+                                    { value: 'under1', label: '১ মিনিটের নিচে' },
+                                    { value: '1to3', label: '১–৩ মিনিট' },
+                                    { value: '3to5', label: '৩–৫ মিনিট' },
+                                    { value: 'over5', label: '৫ মিনিটের বেশি' },
+                                ].map(d => (
+                                    <div key={d.value} onClick={() => handlePillClick('duration', d.value)} className={`flex items-center gap-2 border-[1.4px] rounded-[11px] py-2.5 px-4 text-[13px] font-semibold cursor-pointer select-none whitespace-nowrap ${form.duration === d.value ? 'bg-[#f1dcb2] border-[#c8944f] text-[#a97536]' : 'border-[#e9dfc9] text-[#4a4030] bg-[#fdfaf3]'}`}>
+                                        <span className="text-sm">⏱</span> {d.label}
                                     </div>
                                 ))}
                             </div>
+                            {errors.duration && <p className="text-red-500 text-[11px] mt-1">{errors.duration}</p>}
                         </div>
                     </section>
 
@@ -184,8 +313,8 @@ export default function TalentForm({ onClose }) {
                             <div className="flex items-center gap-3.5">
                                 <div className="w-[38px] h-[38px] rounded-[11px] flex-none bg-gradient-to-br from-[#fbe4e8] to-[#f6d4dc] text-[#a83c50] font-bold text-sm flex items-center justify-center font-playfair">04</div>
                                 <div>
-                                    <div className="text-base font-bold text-[#1b1410]">Consent &amp; অনুমতি</div>
-                                    <div className="text-[10.5px] tracking-[.1em] text-[#c65b6e] font-bold mt-0.5">CONSENT &amp; PERMISSION</div>
+                                    <div className="text-base font-bold text-[#1b1410]">Consent & অনুমতি</div>
+                                    <div className="text-[10.5px] tracking-[.1em] text-[#c65b6e] font-bold mt-0.5">CONSENT & PERMISSION</div>
                                 </div>
                             </div>
                             <div className="text-xs text-[#8a7f6c]">অনুমতি প্রদান করুন</div>
@@ -197,6 +326,7 @@ export default function TalentForm({ onClose }) {
                                 <p className="text-xs text-[#8a7f6c] mt-1 leading-[1.7]">আমি RAW LIQUEUR-কে আমার কনটেন্ট YouTube, সোশ্যাল মিডিয়া ও অন্যান্য প্রচারণার মাধ্যমে প্রকাশ করার অনুমতি দিচ্ছি।</p>
                             </div>
                         </div>
+                        {errors.consentContent && <p className="text-red-500 text-[11px] mb-2 ml-8">{errors.consentContent}</p>}
                         <div onClick={() => setForm({ ...form, consentCommercial: !form.consentCommercial })} className={`flex items-start gap-3 p-3.5 border-[1.4px] rounded-xl mb-0 cursor-pointer ${form.consentCommercial ? 'border-[#7fbf8e] bg-[#dff0e2]' : 'border-[#e9dfc9] bg-[#fdfaf3]'}`}>
                             <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">{form.consentCommercial ? '✓' : ''}</div>
                             <div>
@@ -204,6 +334,7 @@ export default function TalentForm({ onClose }) {
                                 <p className="text-xs text-[#8a7f6c] mt-1 leading-[1.7]">আমি নিশ্চিত করছি RAW LIQUEUR-এর প্রচারাভিযান, শর্টস, পোস্ট, রিলসে বা অন্য কোনো মাধ্যম ব্যবহারের অনুমতি রয়েছে।</p>
                             </div>
                         </div>
+                        {errors.consentCommercial && <p className="text-red-500 text-[11px] mb-2 ml-8">{errors.consentCommercial}</p>}
                     </section>
 
                     {/* 05 TERMS */}
@@ -213,40 +344,15 @@ export default function TalentForm({ onClose }) {
                                 <div className="w-[38px] h-[38px] rounded-[11px] flex-none bg-gradient-to-br from-[#fbe4e8] to-[#f6d4dc] text-[#a83c50] font-bold text-sm flex items-center justify-center font-playfair">05</div>
                                 <div>
                                     <div className="text-base font-bold text-[#1b1410]">শর্তাবলী</div>
-                                    <div className="text-[10.5px] tracking-[.1em] text-[#c65b6e] font-bold mt-0.5">TERMS &amp; CONDITIONS</div>
+                                    <div className="text-[10.5px] tracking-[.1em] text-[#c65b6e] font-bold mt-0.5">TERMS & CONDITIONS</div>
                                 </div>
                             </div>
                             <div className="text-xs text-[#8a7f6c]">অনুগ্রহ করে শর্তাবলী পড়ুন</div>
                         </div>
 
                         <div className="text-[13px] text-[#5b5142] leading-[1.8] mb-4 p-3.5 bg-[#fdfaf3] border border-[#e9dfc9] rounded-xl">
-                            RAW LIQUEUR-এ আপনার প্রতিভা জমা দেওয়ার জন্য আপনাকে ধন্যবাদ। RAW LIQUEUR একটি authentic talent platform, যেখানে আমরা মানুষের স্বাভাবিক প্রতিভা, কণ্ঠ, সৃজনশীলতা এবং পারফরম্যান্স কোনো অপ্রয়োজনীয় artificial enhancement ছাড়াই তুলে ধরতে চাই। ভিডিও Submit করার আগে নিচের সকল নিয়ম ও শর্ত ভালোভাবে পড়ে সম্মতি প্রদান করুন।
+                            RAW LIQUEUR-এ আপনার প্রতিভা জমা দেওয়ার জন্য আপনাকে ধন্যবাদ। RAW LIQUEUR একটি authentic talent platform, যেখানে আমরা মানুষের স্বাভাবিক প্রতিভা, কণ্ঠ, সৃজনশীলতা এবং পারফরম্যান্স কোনো অপ্রয়োজনীয় artificial enhancement ছাড়াই তুলে ধরতে চাই।
                         </div>
-
-                        <div className="text-[14px] font-bold text-[#1b1410] mb-3">Recording Requirements</div>
-                        {[
-                            'Fixed Camera Position — ভিডিও ধারণের সময় মোবাইল ফোন বা recording device অবশ্যই একটি স্থির অবস্থানে রাখতে হবে। হাতে ধরে বা বারবার camera position পরিবর্তন করে ভিডিও ধারণ করা যাবে না।',
-                            'Artist Must Remain in Frame — ভিডিও ধারণের পুরো সময় artist-কে camera frame-এর মধ্যে থাকতে হবে। পারফরম্যান্সের মাঝখানে camera frame-এর বাইরে চলে যাওয়া গ্রহণযোগ্য হবে না।',
-                            'Single Continuous Shot — Single Continuous Shot.',
-                        ].map((term, i) => (
-                            <div key={i} className="flex items-start gap-3 py-3 px-4 border-[1.4px] border-[#e9dfc9] rounded-xl bg-[#fdfaf3] mb-2.5">
-                                <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">✓</div>
-                                <div className="text-[13px] leading-[1.7]"><strong className="text-[#1b1410]">{term.split(' — ')[0]}</strong> — {term.split(' — ').slice(1).join(' — ')}</div>
-                            </div>
-                        ))}
-
-                        <div className="text-[14px] font-bold text-[#1b1410] mb-3 mt-4">Performance Rules</div>
-                        {[
-                            'Instrument Must Remain Visible — কোনো manual/acoustic instrument ব্যবহার করলে সেটি যতটা সম্ভব camera frame এবং focus-এর মধ্যে পরিষ্কারভাবে দৃশ্যমান থাকতে হবে। Instrument এমনভাবে ব্যবহার করা যাবে না যাতে বোঝা না যায় যে এটি artist নিজে live ভাবে বাজাচ্ছেন।',
-                            'Unnecessary Activities — ভিডিওর মধ্যে কোনো ধরনের অপ্রয়োজনীয় conversation বা activity গ্রহণযোগ্য হবে না।',
-                            'Original Performance — Submitted performance অবশ্যই submit করা artist-এর নিজস্ব performance হতে হবে।',
-                            'Safety — Artist নিজের recording environment এবং performance-এর নিরাপত্তার জন্য নিজেই দায়ী থাকবেন। কোনো বিপজ্জনক stunt, unsafe activity বা নিজের/অন্যের ক্ষতি হতে পারে এমন performance Submit করা উচিত নয়।',
-                        ].map((term, i) => (
-                            <div key={i} className={`flex items-start gap-3 py-3 px-4 border-[1.4px] border-[#e9dfc9] rounded-xl bg-[#fdfaf3] ${i === 3 ? 'mb-3' : 'mb-2.5'}`}>
-                                <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">✓</div>
-                                <div className="text-[13px] leading-[1.7]"><strong className="text-[#1b1410]">{term.split(' — ')[0]}</strong> — {term.split(' — ').slice(1).join(' — ')}</div>
-                            </div>
-                        ))}
 
                         <div onClick={() => setForm({ ...form, consentTerms: !form.consentTerms })} className={`flex items-start gap-3 p-3.5 border-[1.4px] rounded-xl mt-3 cursor-pointer ${form.consentTerms ? 'border-[#c8944f] bg-[#f1dcb2]' : 'border-[#e9dfc9] bg-[#fdfaf3]'}`}>
                             <div className="w-5 h-5 rounded-[6px] flex-none mt-0.5 bg-gradient-to-br from-[#7fbf8e] to-[#3f8f52] text-white flex items-center justify-center text-xs">{form.consentTerms ? '✓' : ''}</div>
@@ -255,6 +361,7 @@ export default function TalentForm({ onClose }) {
                                 <p className="text-xs text-[#8a7f6c] mt-1 leading-[1.7]">আমি উপরোক্ত সকল শর্তাবলী পড়েছি এবং সম্মত হচ্ছি।</p>
                             </div>
                         </div>
+                        {errors.consentTerms && <p className="text-red-500 text-[11px] mt-1 ml-8">{errors.consentTerms}</p>}
                     </section>
 
                     {/* 06 UPLOADS */}
@@ -279,6 +386,7 @@ export default function TalentForm({ onClose }) {
                                     <div className="text-[13px] font-semibold text-[#3b3327]">{form.photo ? form.photo.name : 'ছবি নির্বাচন করতে ক্লিক করুন'}</div>
                                     <div className="text-[11.5px] mt-0.5">অথবা এখানে ড্র্যাগ করুন</div>
                                 </label>
+                                {errors.photo && <p className="text-red-500 text-[11px] mt-1">{errors.photo}</p>}
                             </div>
                             <div>
                                 <div className="text-[13.5px] font-semibold mb-0.5 text-[#3b3327]">আপনার প্রতিভার ভিডিও আপলোড করুন <span className="text-[#c65b6e]">*</span></div>
@@ -289,14 +397,15 @@ export default function TalentForm({ onClose }) {
                                     <div className="text-[13px] font-semibold text-[#3b3327]">{form.video ? form.video.name : 'ভিডিও নির্বাচন করতে ক্লিক করুন'}</div>
                                     <div className="text-[11.5px] mt-0.5">অথবা এখানে ড্র্যাগ করুন</div>
                                 </label>
+                                {errors.video && <p className="text-red-500 text-[11px] mt-1">{errors.video}</p>}
                             </div>
                         </div>
                     </section>
 
                     {/* Submit */}
-                    <div className="mt-6 bg-gradient-to-r from-[#c8944f] to-[#a97536] rounded-2xl py-4 px-[17px] text-center text-[#2a1a08] font-bold text-[15.5px] tracking-[.01em] cursor-pointer shadow-[0_14px_30px_-14px_rgba(169,117,54,.55)]" onClick={handleSubmit}>
-                        ✈ Submit — আপনার প্রতিভা জমা দিন →
-                    </div>
+                    <button type="submit" disabled={submitting} className="mt-6 w-full bg-gradient-to-r from-[#c8944f] to-[#a97536] rounded-2xl py-4 px-[17px] text-center text-[#2a1a08] font-bold text-[15.5px] tracking-[.01em] cursor-pointer shadow-[0_14px_30px_-14px_rgba(169,117,54,.55)] disabled:opacity-50 disabled:cursor-not-allowed">
+                        {submitting ? '⏳ জমা হচ্ছে...' : '✈ Submit — আপনার প্রতিভা জমা দিন →'}
+                    </button>
                     <div className="text-center text-[11.5px] text-[#8a7f6c] mt-3.5 leading-[1.8] pb-4">
                         নিভয়ন, RAW LIQUEUR সেরা প্রতিভাদের সবার সামনে তুলে ধরতে প্রতিশ্রুতিবদ্ধ।<br/>
                         আপনার প্রতিভাই হতে পারে পরবর্তী তারকা!

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmailSetting;
 use App\Models\TalentSubmission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -127,16 +128,17 @@ class TalentSubmissionController extends Controller
      */
     private function notify(TalentSubmission $submission): void
     {
-        $to = config('mail.submissions_to');
+        $emailSettings = EmailSetting::first();
 
-        if (! $to) {
+        if (! $emailSettings || ! $emailSettings->notifications_enabled || ! $emailSettings->submissions_to) {
             return;
         }
 
         try {
-            Mail::raw($this->summary($submission), function ($message) use ($to, $submission) {
-                $message->to($to)
-                    ->subject("New talent submission — {$submission->name} ({$submission->district})");
+            Mail::raw($this->summary($submission), function ($message) use ($emailSettings, $submission) {
+                $message->to($emailSettings->submissions_to)
+                    ->subject("New talent submission — {$submission->name} ({$submission->district})")
+                    ->from($emailSettings->mail_from_address, $emailSettings->mail_from_name);
             });
         } catch (\Throwable $exception) {
             Log::error('Talent submission notification failed', [

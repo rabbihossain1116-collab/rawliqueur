@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import TalentForm from '@/Components/TalentForm';
 
 function VoicePair({ data }) {
     return (
@@ -43,6 +45,7 @@ function CommunityCard({ data }) {
 }
 
 export default function About({ aboutContent }) {
+    const [showTalentForm, setShowTalentForm] = useState(false);
     const hero = aboutContent?.hero || {
         bgImage: '/images/aboutuse.png',
         title: 'প্রতিভা ও কবিতা গানে',
@@ -111,7 +114,7 @@ export default function About({ aboutContent }) {
     };
 
     return (
-        <PublicLayout>
+        <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
             {/* Hero */}
             <section className="px-8 pt-6 pb-0 max-[600px]:px-4">
                 <div className="max-w-[1180px] mx-auto relative rounded-2xl overflow-hidden min-h-[340px] flex items-center bg-cover bg-center"
@@ -261,6 +264,7 @@ export default function About({ aboutContent }) {
                     </div>
                 </div>
             </section>
+            {showTalentForm && <TalentForm onClose={() => setShowTalentForm(false)} />}
         </PublicLayout>
     );
 }

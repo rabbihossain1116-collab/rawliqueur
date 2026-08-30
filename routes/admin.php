@@ -68,4 +68,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Settings
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::put('settings/email', [SettingController::class, 'updateEmail'])->name('settings.email.update');
+    Route::post('settings/test-email', [SettingController::class, 'sendTestEmail'])->name('settings.test-email');
 });

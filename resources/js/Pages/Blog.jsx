@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
+import TalentForm from '@/Components/TalentForm';
 import { Link } from '@inertiajs/react';
 
 export default function Blog({ blogContent }) {
@@ -157,7 +158,7 @@ export default function Blog({ blogContent }) {
                 <div className="max-w-[700px] mx-auto px-8 text-center max-[480px]:px-4">
                     <span className="text-5xl mb-4 block">{newsletter.icon}</span>
                     <h2 className="font-playfair italic text-[36px] text-white mb-4 max-[480px]:text-[28px]">
-                        {newsletter.title.split('loop').map((part, i) => i === 0 ? <>{part}<span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">loop</span></> : <span key={i}>{part}</span>)}
+                        {newsletter.title.split('loop').map((part, i) => i === 0 ? <Fragment key={i}>{part}<span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">loop</span></Fragment> : <span key={i}>{part}</span>)}
                     </h2>
                     <p className="text-white/70 text-[16px] leading-[1.8] mb-8">{newsletter.description}</p>
                     <div className="flex gap-3 max-[480px]:flex-col">
@@ -173,7 +174,7 @@ export default function Blog({ blogContent }) {
                 <div className="max-w-[800px] mx-auto px-8 text-center max-[480px]:px-4">
                     <span className="text-5xl mb-4 block">{cta.icon}</span>
                     <h2 className="font-playfair italic text-[36px] mb-5 max-[480px]:text-[28px]">
-                        {cta.title.split('share').map((part, i) => i === 0 ? <>{part}<span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">share</span></> : <span key={i}>{part}</span>)}
+                        {cta.title.split('share').map((part, i) => i === 0 ? <Fragment key={i}>{part}<span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">share</span></Fragment> : <span key={i}>{part}</span>)}
                     </h2>
                     <p className="text-muted text-[16px] leading-[1.8] mb-8 max-w-[500px] mx-auto">{cta.description}</p>
                     <div className="flex gap-4 justify-center flex-wrap">
@@ -182,6 +183,7 @@ export default function Blog({ blogContent }) {
                     </div>
                 </div>
             </section>
+            {showTalentForm && <TalentForm onClose={() => setShowTalentForm(false)} />}
         </PublicLayout>
     );
 }
