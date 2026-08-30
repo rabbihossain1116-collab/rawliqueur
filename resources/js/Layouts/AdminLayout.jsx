@@ -8,6 +8,7 @@ const navigation = [
     { name: 'Artists Content', href: '/admin/artists-content', icon: '🎤' },
     { name: 'Artists', href: '/admin/artists', icon: '👤' },
     { name: 'Talent Submissions', href: '/admin/talent', icon: '📝' },
+    { name: 'Blog Content', href: '/admin/blog-content', icon: '📰' },
     { name: 'Blog Posts', href: '/admin/blog', icon: '✍️' },
     { name: 'Winners Content', href: '/admin/winners-content', icon: '🏆' },
     { name: 'Winners', href: '/admin/winners', icon: '🥇' },

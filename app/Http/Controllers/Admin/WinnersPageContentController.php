@@ -12,6 +12,7 @@ class WinnersPageContentController extends Controller
     public function index()
     {
         $content = WinnersPageContent::firstOrCreate(['id' => 1]);
+
         return Inertia::render('Admin/WinnersContent', [
             'content' => $content,
         ]);

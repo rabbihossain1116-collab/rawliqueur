@@ -12,6 +12,7 @@ class AboutContentController extends Controller
     public function index()
     {
         $content = AboutContent::firstOrCreate(['id' => 1]);
+
         return Inertia::render('Admin/AboutContent', [
             'content' => $content,
         ]);

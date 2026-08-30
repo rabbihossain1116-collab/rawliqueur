@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
@@ -16,12 +15,12 @@ class UploadController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('images'), $filename);
 
             return response()->json([
                 'success' => true,
-                'url' => '/images/' . $filename,
+                'url' => '/images/'.$filename,
                 'filename' => $filename,
             ]);
         }

@@ -12,6 +12,7 @@ class ArtistsPageContentController extends Controller
     public function index()
     {
         $content = ArtistsPageContent::firstOrCreate(['id' => 1]);
+
         return Inertia::render('Admin/ArtistsContent', [
             'content' => $content,
         ]);

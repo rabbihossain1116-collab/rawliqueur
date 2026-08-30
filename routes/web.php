@@ -3,6 +3,7 @@
 use App\Http\Controllers\TalentSubmissionController;
 use App\Models\AboutContent;
 use App\Models\ArtistsPageContent;
+use App\Models\BlogPageContent;
 use App\Models\HomeContent;
 use App\Models\WinnersPageContent;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +41,13 @@ Route::get('/winners', function () {
     ]);
 })->name('winners');
 
-Route::get('/blog', fn () => Inertia::render('Blog'))->name('blog');
+Route::get('/blog', function () {
+    $blogContent = BlogPageContent::firstOrCreate(['id' => 1]);
+
+    return Inertia::render('Blog', [
+        'blogContent' => $blogContent,
+    ]);
+})->name('blog');
 
 Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
 

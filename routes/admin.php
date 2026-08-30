@@ -1,17 +1,18 @@
 <?php
 
 use App\Http\Controllers\Admin\AboutContentController;
-use App\Http\Controllers\Admin\ArtistsPageContentController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\WinnersPageContentController;
 use App\Http\Controllers\Admin\ArtistController;
+use App\Http\Controllers\Admin\ArtistsPageContentController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BlogPageContentController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomeContentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TalentController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\WinnerController;
+use App\Http\Controllers\Admin\WinnersPageContentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
@@ -33,6 +34,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Winners Page Content
     Route::get('winners-content', [WinnersPageContentController::class, 'index'])->name('winners-content');
     Route::put('winners-content', [WinnersPageContentController::class, 'update'])->name('winners-content.update');
+
+    // Blog Page Content
+    Route::get('blog-content', [BlogPageContentController::class, 'index'])->name('blog-content');
+    Route::put('blog-content', [BlogPageContentController::class, 'update'])->name('blog-content.update');
 
     // Upload
     Route::post('upload', [UploadController::class, 'store'])->name('upload');
