@@ -1,10 +1,17 @@
 <?php
 
 use App\Http\Controllers\TalentSubmissionController;
+use App\Models\HomeContent;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('Home'))->name('home');
+Route::get('/', function () {
+    $homeContent = HomeContent::getOrCreate();
+
+    return Inertia::render('Home', [
+        'homeContent' => $homeContent,
+    ]);
+})->name('home');
 
 Route::get('/about', fn () => Inertia::render('About'))->name('about');
 

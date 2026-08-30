@@ -4,14 +4,23 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ArtistController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\HomeContentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TalentController;
+use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\WinnerController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Home Content
+    Route::get('home-content', [HomeContentController::class, 'index'])->name('home-content');
+    Route::put('home-content', [HomeContentController::class, 'update'])->name('home-content.update');
+
+    // Upload
+    Route::post('upload', [UploadController::class, 'store'])->name('upload');
 
     // Artists
     Route::resource('artists', ArtistController::class)->except(['show']);

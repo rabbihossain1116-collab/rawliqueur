@@ -2,13 +2,7 @@ import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import TalentForm from '@/Components/TalentForm';
 
-const talents = [
-    { rank: '01', name: 'Moha Jadu', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '380K', videoId: 'UghMf59vDJM', variant: '' },
-    { rank: '02', name: 'Long Distance Love', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '360K', videoId: 'sqJ2QhjBQaw', variant: '' },
-    { rank: '03', name: 'Ma Lo Ma', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '340K', videoId: 'zEqqW-USajs', variant: '' },
-];
-
-const categories = [
+const defaultCategories = [
     { icon: '🎚️', label: 'All' },
     { icon: '🎵', label: 'Singing' },
     { icon: '💃', label: 'Dance' },
@@ -18,7 +12,21 @@ const categories = [
     { icon: '▦', label: 'Others' },
 ];
 
-const videos = [
+const defaultTalents = [
+    { rank: '01', name: 'Moha Jadu', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '380K', videoId: 'UghMf59vDJM', variant: '' },
+    { rank: '02', name: 'Long Distance Love', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '360K', videoId: 'sqJ2QhjBQaw', variant: '' },
+    { rank: '03', name: 'Ma Lo Ma', type: 'Singing', desc: 'Coke Studio Bangla S3', likes: '340K', videoId: 'zEqqW-USajs', variant: '' },
+];
+
+const defaultStats = [
+    { icon: '⭐', value: '25K+', label: 'Talents Discovered' },
+    { icon: '👁️', value: '500K+', label: 'Total Views' },
+    { icon: '👥', value: '10K+', label: 'Active Artists' },
+    { icon: '▦', value: '50+', label: 'Categories' },
+    { icon: '🏆', value: '120+', label: 'Winners' },
+];
+
+const defaultVideos = [
     { tag: 'Singing', title: 'Sa Re Ga Ma Pa 2025 | Ep 53 Best Scene', by: 'Priya Sengupta', dur: '04:55', views: '6.2M', likes: '540000', videoId: 'qz38Kthnxfo' },
     { tag: 'Singing', title: 'Kishore Kumar Special | Jyotirmayee Nayak | Indian Idol S16', by: 'Jyotirmayee Nayak', dur: '04:05', views: '12K', likes: '1800', videoId: 'lIfJ0nngD68' },
     { tag: 'Singing', title: 'Kehna Hai Kehna Hai | Tanishk Shukla | Indian Idol S16', by: 'Tanishk Shukla', dur: '03:40', views: '16K', likes: '2100', videoId: 'pMhjxMwY9W0' },
@@ -32,14 +40,6 @@ const videos = [
     { tag: 'Singing', title: 'Ma Lo Ma | Coke Studio Bangla', by: 'Tania Khatun', dur: '03:55', views: '38M', likes: '3400000', videoId: 'zEqqW-USajs' },
     { tag: 'Singing', title: 'Moha Jadu | Coke Studio Bangla S3', by: 'Ridoy Das', dur: '04:20', views: '42M', likes: '3800000', videoId: 'UghMf59vDJM' },
     { tag: 'Singing', title: 'Long Distance Love | Coke Studio Bangla S3', by: 'Sneha Chakraborty', dur: '04:45', views: '76.3M', likes: '5997000', videoId: 'sqJ2QhjBQaw' },
-];
-
-const stats = [
-    { icon: '⭐', value: '25K+', label: 'Talents Discovered' },
-    { icon: '👁️', value: '500K+', label: 'Total Views' },
-    { icon: '👥', value: '10K+', label: 'Active Artists' },
-    { icon: '▦', value: '50+', label: 'Categories' },
-    { icon: '🏆', value: '120+', label: 'Winners' },
 ];
 
 const filterPills = ['All', 'Singing', 'Dance', 'Storytelling', 'Poetry', 'Instrumental'];
@@ -63,33 +63,55 @@ function VideoModal({ videoId, onClose }) {
     );
 }
 
-export default function Home() {
+export default function Home({ homeContent }) {
     const [activeFilter, setActiveFilter] = useState('All');
     const [modalVideoId, setModalVideoId] = useState(null);
     const [showTalentForm, setShowTalentForm] = useState(false);
+
+    // Use dynamic data or defaults
+    const hero = homeContent?.hero || {
+        title: 'প্রতিভা ও কবিতা গানে',
+        highlight: 'RAW LIQUEUR',
+        subtitle: 'বাংলার প্রাণে',
+        description: 'গানের মাঝে ফুটে বির থাগসাব সেরা প্রতিভা সবাইকে বেধান, সবাইকে শোনান।',
+        buttonText: '♫ EXPLORE TALENTS',
+        secondButtonText: 'HOW IT WORKS',
+        bgImage: '/images/slider 1.png',
+    };
+
+    const categories = homeContent?.categories?.length > 0 ? homeContent.categories : defaultCategories;
+    const talents = homeContent?.top_talents?.length > 0 ? homeContent.top_talents : defaultTalents;
+    const stats = homeContent?.stats?.length > 0 ? homeContent.stats : defaultStats;
+    const videos = homeContent?.videos?.length > 0 ? homeContent.videos : defaultVideos;
+    const cta = homeContent?.cta || {
+        tagline: 'BE THE NEXT FEATURED ARTIST',
+        title: 'Show us your raw talent.',
+        highlight: 'No AI, No Edit, Just You.',
+        buttonText: '★ SUBMIT YOUR TALENT →',
+    };
 
     return (
         <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
             {/* Hero */}
             <section className="relative min-h-[600px] flex items-center max-[700px]:min-h-[350px]">
-                <img src="/images/slider%201.png" alt="hero" className="absolute inset-0 w-full h-full object-cover object-center" />
+                <img src={hero.bgImage || '/images/slider 1.png'} alt="hero" className="absolute inset-0 w-full h-full object-cover object-center" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
                 <div className="relative z-10 max-w-[1240px] px-8 py-[70px] max-[700px]:py-[50px] max-[480px]:px-4">
                     <h1 className="text-[44px] leading-[1.35] font-bold mb-[18px] text-left text-white max-[700px]:text-[32px] max-[480px]:text-[26px]">
-                        প্রতিভা ও কবিতা গানে<br />
-                        <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent font-[800] font-poppins italic">RAW LIQUEUR</span><br />
-                        বাংলার প্রাণে
+                        {hero.title}<br />
+                        <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent font-[800] font-poppins italic">{hero.highlight}</span><br />
+                        {hero.subtitle}
                     </h1>
                     <p className="text-[rgba(255,255,255,.8)] text-[15px] leading-[1.8] max-w-[420px] mb-[30px] text-left max-[480px]:text-[13.5px]">
-                        গানের মাঝে ফুটে বির থাগসাব সেরা প্রতিভা সবাইকে বেধান, সবাইকে শোনান।
+                        {hero.description}
                     </p>
                     <div className="flex gap-4 items-center flex-wrap">
                 <button className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105">
-                            ♫ EXPLORE TALENTS
+                            {hero.buttonText}
                         </button>
                         <button className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-white/10 text-white border-[1.5px] border-white/30 backdrop-blur-sm hover:bg-white/20">
                             <span className="w-[26px] h-[26px] rounded-full bg-gradient-to-r from-orange to-pink text-white flex items-center justify-center text-[11px]">▶</span>
-                            HOW IT WORKS
+                            {hero.secondButtonText}
                         </button>
                     </div>
                     <div className="flex gap-1.5 mt-[26px]">
@@ -228,14 +250,14 @@ export default function Home() {
                 <img src="/images/footer.png" alt="cta" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="relative z-10 text-right max-[700px]:text-center">
-                    <div className="text-white text-xs font-bold tracking-[2px] mb-2">BE THE NEXT FEATURED ARTIST</div>
+                    <div className="text-white text-xs font-bold tracking-[2px] mb-2">{cta.tagline}</div>
                     <h3 className="text-[26px] font-bold leading-[1.4] text-white max-[700px]:text-[22px]">
-                        Show us your raw talent.<br />
-                        <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">No AI, No Edit, Just You.</span>
+                        {cta.title}<br />
+                        <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">{cta.highlight}</span>
                     </h3>
                 </div>
                 <button onClick={() => setShowTalentForm(true)} className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 whitespace-nowrap cursor-pointer">
-                    &#9733; SUBMIT YOUR TALENT →
+                    {cta.buttonText}
                 </button>
             </div>
 
