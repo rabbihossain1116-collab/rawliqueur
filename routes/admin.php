@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ArtistsPageContentController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogPageContentController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ContactPageContentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomeContentController;
 use App\Http\Controllers\Admin\SettingController;
@@ -38,6 +39,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Blog Page Content
     Route::get('blog-content', [BlogPageContentController::class, 'index'])->name('blog-content');
     Route::put('blog-content', [BlogPageContentController::class, 'update'])->name('blog-content.update');
+
+    // Contact Page Content
+    Route::get('contact-content', [ContactPageContentController::class, 'index'])->name('contact-content');
+    Route::put('contact-content', [ContactPageContentController::class, 'update'])->name('contact-content.update');
 
     // Upload
     Route::post('upload', [UploadController::class, 'store'])->name('upload');

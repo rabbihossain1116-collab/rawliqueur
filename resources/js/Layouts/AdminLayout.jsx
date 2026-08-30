@@ -12,6 +12,7 @@ const navigation = [
     { name: 'Blog Posts', href: '/admin/blog', icon: '✍️' },
     { name: 'Winners Content', href: '/admin/winners-content', icon: '🏆' },
     { name: 'Winners', href: '/admin/winners', icon: '🥇' },
+    { name: 'Contact Content', href: '/admin/contact-content', icon: '📇' },
     { name: 'Contact Messages', href: '/admin/contact', icon: '📬' },
     { name: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ];

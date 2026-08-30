@@ -4,6 +4,7 @@ use App\Http\Controllers\TalentSubmissionController;
 use App\Models\AboutContent;
 use App\Models\ArtistsPageContent;
 use App\Models\BlogPageContent;
+use App\Models\ContactPageContent;
 use App\Models\HomeContent;
 use App\Models\WinnersPageContent;
 use Illuminate\Support\Facades\Route;
@@ -49,7 +50,13 @@ Route::get('/blog', function () {
     ]);
 })->name('blog');
 
-Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
+Route::get('/contact', function () {
+    $contactContent = ContactPageContent::firstOrCreate(['id' => 1]);
+
+    return Inertia::render('Contact', [
+        'contactContent' => $contactContent,
+    ]);
+})->name('contact');
 
 Route::post('/submit-talent', [TalentSubmissionController::class, 'store'])
     ->middleware('throttle:6,60')
