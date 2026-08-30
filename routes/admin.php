@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AboutContentController;
+use App\Http\Controllers\Admin\ArtistsPageContentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ArtistController;
 use App\Http\Controllers\Admin\BlogController;
@@ -23,6 +24,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // About Content
     Route::get('about-content', [AboutContentController::class, 'index'])->name('about-content');
     Route::put('about-content', [AboutContentController::class, 'update'])->name('about-content.update');
+
+    // Artists Page Content
+    Route::get('artists-content', [ArtistsPageContentController::class, 'index'])->name('artists-content');
+    Route::put('artists-content', [ArtistsPageContentController::class, 'update'])->name('artists-content.update');
 
     // Upload
     Route::post('upload', [UploadController::class, 'store'])->name('upload');

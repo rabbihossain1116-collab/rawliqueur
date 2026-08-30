@@ -1,21 +1,6 @@
 import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 
-const artists = [
-    { name: 'Sneha Chakraborty', loc: 'Bangladesh', role: 'SINGER', uploads: 78, g: 'from-[#5b2a52] to-[#1c0e22]', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Arka Dey', loc: 'Kolkata, India', role: 'POET', uploads: 54, g: 'from-[#3a2440] to-[#0c0810]', img: 'https://images.unsplash.com/photo-1508973379184-7517410fb0bc?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Ridoy Das', loc: 'Bangladesh', role: 'SINGER', uploads: 42, g: 'from-[#3f4750] to-[#12161a]', img: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Suvo Adhikary', loc: 'Kolkata, India', role: 'MUSICIAN', uploads: 13, g: 'from-[#141414] to-black', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Diya Nandy', loc: 'Kolkata, India', role: 'DANCER', uploads: 461, g: 'from-[#3a2018] to-[#160b07]', img: 'https://images.unsplash.com/photo-1547153760-18fc86c83137?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Iman Sen', loc: 'Bangladesh', role: 'STORYTELLER', uploads: 47, g: 'from-[#5b6270] to-[#1c2027]', img: 'https://images.unsplash.com/photo-1478147427282-58a87a120781?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Rohan Mitra', loc: 'Kolkata, India', role: 'STORYTELLER', uploads: 38, g: 'from-[#6b4a1c] to-[#241608]', img: 'https://images.unsplash.com/photo-1461784180009-27c1303a64b6?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Tania Khatun', loc: 'Bangladesh', role: 'SINGER', uploads: 49, g: 'from-[#7a2436] to-[#220a10]', img: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Aniket Pal', loc: 'Bangladesh', role: 'POET', uploads: 34, g: 'from-[#312a24] to-[#0e0a08]', img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Moumita Hore', loc: 'Kolkata, India', role: 'SINGER', uploads: 32, g: 'from-[#8c2f3a] to-[#220b0e]', img: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=400&q=80&auto=format&fit=crop' },
-    { name: 'Farhan Ahmed', loc: 'Bangladesh', role: 'MUSICIAN', uploads: 71, g: 'from-[#454545] to-[#0a0a0a]', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop&sat=-100' },
-    { name: 'Priya Sengupta', loc: 'Bangladesh', role: 'DANCER', uploads: 36, g: 'from-[#c98a2e] to-[#3a2408]', img: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=80&auto=format&fit=crop' },
-];
-
 const badgeColors = {
     SINGER: 'bg-[#8C2233]',
     POET: 'bg-[#1F2937]',
@@ -74,29 +59,57 @@ function PoetIcon() {
 
 const roleIcons = { SINGER: SingerIcon, POET: PoetIcon, MUSICIAN: MusicianIcon, DANCER: DancerIcon, STORYTELLER: StorytellerIcon };
 
-export default function Artists() {
+export default function Artists({ artistsContent }) {
     const [activeFilter, setActiveFilter] = useState('All');
+
+    const hero = artistsContent?.hero || {
+        bgImage: '/images/Artist.png',
+        title: 'সম্মানে ও ইতিহাসে',
+        subtitle: 'আমার প্রতিভা বিশ্ব মাঝে',
+    };
+
+    const sectionHeader = artistsContent?.section_header || {
+        subtitle: 'OUR ARTISTS',
+        title: 'Meet the Raw Talent',
+        description: 'A platform for real talent and performances. Discover amazing artists from different categories and backgrounds.',
+    };
+
+    const artists = artistsContent?.artists || [
+        { name: 'Sneha Chakraborty', loc: 'Bangladesh', role: 'SINGER', uploads: 78, g: 'from-[#5b2a52] to-[#1c0e22]', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop' },
+        { name: 'Arka Dey', loc: 'Kolkata, India', role: 'POET', uploads: 54, g: 'from-[#3a2440] to-[#0c0810]', img: 'https://images.unsplash.com/photo-1508973379184-7517410fb0bc?w=400&q=80&auto=format&fit=crop' },
+        { name: 'Ridoy Das', loc: 'Bangladesh', role: 'SINGER', uploads: 42, g: 'from-[#3f4750] to-[#12161a]', img: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop' },
+        { name: 'Suvo Adhikary', loc: 'Kolkata, India', role: 'MUSICIAN', uploads: 13, g: 'from-[#141414] to-black', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop' },
+        { name: 'Diya Nandy', loc: 'Kolkata, India', role: 'DANCER', uploads: 461, g: 'from-[#3a2018] to-[#160b07]', img: 'https://images.unsplash.com/photo-1547153760-18fc86c83137?w=400&q=80&auto=format&fit=crop' },
+        { name: 'Iman Sen', loc: 'Bangladesh', role: 'STORYTELLER', uploads: 47, g: 'from-[#5b6270] to-[#1c2027]', img: 'https://images.unsplash.com/photo-1478147427282-58a87a120781?w=400&q=80&auto=format&fit=crop' },
+    ];
+
+    const cta = artistsContent?.cta || {
+        subtitle: 'BE THE NEXT FEATURED ARTIST',
+        title: 'Show us your raw talent. No AI, No Edit, Just You.',
+        description: 'Submit your talent or support others. Together, we celebrate real art and real people.',
+        buttonText: '👤 Submit Your Talent →',
+    };
 
     return (
         <PublicLayout>
             {/* Hero */}
             <section className="max-w-[1180px] mx-auto mt-[22px] px-8 max-[600px]:px-4">
                 <div className="relative rounded-2xl overflow-hidden h-[400px] bg-cover bg-center"
-                    style={{ backgroundImage: "url('/images/Artist.png')" }}>
+                    style={{ backgroundImage: `url('${hero.bgImage}')` }}>
                     <div className="absolute inset-0 bg-black/40" />
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-5">
-                        <div className="font-hind text-[34px] font-semibold text-[#E9C784] tracking-[1px] text-shadow-lg max-[560px]:text-[24px]">সম্মানে ও ইতিহাসে</div>
+                        <div className="font-hind text-[34px] font-semibold text-[#E9C784] tracking-[1px] text-shadow-lg max-[560px]:text-[24px]">{hero.title}</div>
                         <div className="w-[210px] h-px bg-gradient-to-r from-transparent via-[#E9C784] to-transparent my-4" />
-                        <div className="font-hind text-[22px] font-semibold text-white tracking-[.5px] max-[560px]:text-[16px]">আমার প্রতিভা বিশ্ব মাঝে</div>
+                        <div className="font-hind text-[22px] font-semibold text-white tracking-[.5px] max-[560px]:text-[16px]">{hero.subtitle}</div>
                     </div>
                 </div>
             </section>
 
             {/* Section Head */}
             <div className="text-center pt-16 pb-[34px]">
-                <div className="text-pink font-bold text-[11.5px] tracking-[3px] uppercase before:content-['—'] before:mr-2.5 before:text-orange after:content-['—'] after:ml-2.5 after:text-orange">OUR ARTISTS</div>
-                <h2 className="font-playfair text-[38px] mt-3.5 font-semibold text-ink max-[560px]:text-[28px]">Meet the Raw Talent</h2>
-                <p className="max-w-[520px] mx-auto mt-4 text-muted text-[15px] leading-[1.6]">A platform for real talent and performances. Discover amazing artists from different categories and backgrounds.</p>
+                <div className="text-pink font-bold text-[11.5px] tracking-[3px] uppercase before:content-['—'] before:mr-2.5 before:text-orange after:content-['—'] after:ml-2.5 after:text-orange">{sectionHeader.subtitle}</div>
+                <h2 className="font-playfair text-[38px] mt-3.5 font-semibold text-ink max-[560px]:text-[28px]">{sectionHeader.title}</h2>
+                <p className="max-w-[520px] mx-auto mt-4 text-muted text-[15px] leading-[1.6]">{sectionHeader.description}</p>
             </div>
 
             <main className="max-w-[1180px] mx-auto px-8 max-[600px]:px-4">
@@ -163,12 +176,12 @@ export default function Artists() {
                             <rect x="34" y="80" width="32" height="6" rx="3" fill="#D9A94F"/>
                         </svg>
                         <div className="cta-text">
-                            <div className="text-[#E9C784] font-bold text-[11.5px] tracking-[3px] uppercase before:content-['—'] before:mr-2.5 before:text-[#E9C784] after:content-['—'] after:ml-2.5 after:text-[#E9C784]">BE THE NEXT FEATURED ARTIST</div>
-                            <h2 className="text-white font-playfair text-[27px] leading-[1.35] mt-2.5 max-[560px]:text-[22px]">Show us your raw talent.<br/>No AI, No Edit, Just You.</h2>
-                            <p className="text-[#c9bfb3] text-[14px] mt-3">Submit your talent or support others.<br/>Together, we celebrate real art and real people.</p>
+                            <div className="text-[#E9C784] font-bold text-[11.5px] tracking-[3px] uppercase before:content-['—'] before:mr-2.5 before:text-[#E9C784] after:content-['—'] after:ml-2.5 after:text-[#E9C784]">{cta.subtitle}</div>
+                            <h2 className="text-white font-playfair text-[27px] leading-[1.35] mt-2.5 max-[560px]:text-[22px]">{cta.title}</h2>
+                            <p className="text-[#c9bfb3] text-[14px] mt-3">{cta.description}</p>
                         </div>
                     </div>
-                    <button className="inline-flex items-center gap-2 bg-gradient-to-r from-orange to-pink text-white font-semibold text-[13.5px] py-3 px-[22px] rounded-30 border-none cursor-pointer shadow-[0_8px_18px_rgba(236,30,99,.35)] hover:-translate-y-0.5 transition-all whitespace-nowrap relative z-10 flex-none">👤 Submit Your Talent →</button>
+                    <button className="inline-flex items-center gap-2 bg-gradient-to-r from-orange to-pink text-white font-semibold text-[13.5px] py-3 px-[22px] rounded-30 border-none cursor-pointer shadow-[0_8px_18px_rgba(236,30,99,.35)] hover:-translate-y-0.5 transition-all whitespace-nowrap relative z-10 flex-none">{cta.buttonText}</button>
                 </div>
             </section>
         </PublicLayout>
