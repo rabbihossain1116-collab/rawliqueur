@@ -62,6 +62,7 @@ class HomeContentSeeder extends Seeder
                     'title' => 'Show us your raw talent.',
                     'highlight' => 'No AI, No Edit, Just You.',
                     'buttonText' => '★ SUBMIT YOUR TALENT →',
+                    'bgImage' => '/images/footer.png',
                 ],
             ]
         );

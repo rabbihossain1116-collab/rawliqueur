@@ -41,7 +41,7 @@ export default function HomeContent({ content }) {
         put('/admin/home-content');
     };
 
-    const handleFileUpload = async (e, field) => {
+    const handleFileUpload = async (e, section) => {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -61,7 +61,11 @@ export default function HomeContent({ content }) {
 
             const result = await response.json();
             if (result.success) {
-                setData('hero', { ...data.hero, bgImage: result.url });
+                if (section === 'hero') {
+                    setData('hero', { ...data.hero, bgImage: result.url });
+                } else if (section === 'cta') {
+                    setData('cta', { ...data.cta, bgImage: result.url });
+                }
             }
         } catch (error) {
             console.error('Upload failed:', error);
@@ -517,6 +521,49 @@ export default function HomeContent({ content }) {
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                                 <h3 className="text-lg font-bold text-[#1a1425] mb-6">CTA Banner</h3>
                                 <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Background Image</label>
+                                        <div className="flex items-center gap-4">
+                                            <label className="flex-1 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-[#ec1e63] hover:bg-pink-50/50 transition-all">
+                                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                    {uploading ? (
+                                                        <div className="text-center">
+                                                            <div className="w-8 h-8 border-4 border-[#ec1e63] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                                                            <p className="text-sm text-gray-500">Uploading...</p>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <svg className="w-10 h-10 mb-3 text-gray-400" fill="none" viewBox="0 0 20 16">
+                                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                                            </svg>
+                                                            <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span></p>
+                                                            <p className="text-xs text-gray-400">PNG, JPG, WEBP (MAX. 5MB)</p>
+                                                        </>
+                                                    )}
+                                                </div>
+                                                <input
+                                                    type="file"
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                    onChange={(e) => handleFileUpload(e, 'cta')}
+                                                    disabled={uploading}
+                                                />
+                                            </label>
+                                            {data.cta.bgImage && (
+                                                <div className="relative">
+                                                    <img src={data.cta.bgImage} alt="Preview" className="w-40 h-32 object-cover rounded-xl border border-gray-200" />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setData('cta', { ...data.cta, bgImage: '' })}
+                                                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <p className="mt-2 text-xs text-gray-500">Upload a background image for the CTA banner</p>
+                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Tagline</label>
                                         <input

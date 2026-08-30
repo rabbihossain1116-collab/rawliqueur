@@ -88,6 +88,7 @@ export default function Home({ homeContent }) {
         title: 'Show us your raw talent.',
         highlight: 'No AI, No Edit, Just You.',
         buttonText: '★ SUBMIT YOUR TALENT →',
+        bgImage: '/images/footer.png',
     };
 
     return (
@@ -247,7 +248,7 @@ export default function Home({ homeContent }) {
 
             {/* CTA Banner */}
             <div className="relative max-w-[1160px] mx-auto mb-[70px] rounded-[22px] overflow-hidden flex items-center justify-end px-[50px] py-9 gap-6 max-[700px]:flex-col max-[700px]:text-center max-[700px]:justify-center max-[700px]:p-[30px]">
-                <img src="/images/footer.png" alt="cta" className="absolute inset-0 w-full h-full object-cover" />
+                <img src={cta.bgImage || '/images/footer.png'} alt="cta" className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="relative z-10 text-right max-[700px]:text-center">
                     <div className="text-white text-xs font-bold tracking-[2px] mb-2">{cta.tagline}</div>
