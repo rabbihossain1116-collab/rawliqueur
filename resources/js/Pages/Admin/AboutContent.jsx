@@ -2,6 +2,49 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
+function ImageUpload({ value, onChange, uploading }) {
+    return (
+        <div className="flex items-center gap-3">
+            <label className="flex-1 flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-[#ec1e63] hover:bg-pink-50/50 transition-all">
+                <div className="flex flex-col items-center justify-center pt-2 pb-2">
+                    {uploading ? (
+                        <div className="text-center">
+                            <div className="w-6 h-6 border-4 border-[#ec1e63] border-t-transparent rounded-full animate-spin mx-auto mb-1" />
+                            <p className="text-xs text-gray-500">Uploading...</p>
+                        </div>
+                    ) : (
+                        <>
+                            <svg className="w-8 h-8 mb-1 text-gray-400" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                            </svg>
+                            <p className="text-xs text-gray-500"><span className="font-semibold">Upload</span></p>
+                        </>
+                    )}
+                </div>
+                <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={onChange}
+                    disabled={uploading}
+                />
+            </label>
+            {value && (
+                <div className="relative">
+                    <img src={value} alt="Preview" className="w-24 h-24 object-cover rounded-xl border border-gray-200" />
+                    <button
+                        type="button"
+                        onClick={() => onChange({ target: { files: [] } })}
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] hover:bg-red-600"
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function AboutContent({ content }) {
     const { flash } = usePage().props;
     const [activeTab, setActiveTab] = useState('hero');
@@ -51,7 +94,7 @@ export default function AboutContent({ content }) {
         put('/admin/about-content');
     };
 
-    const handleFileUpload = async (e, path) => {
+    const handleFileUpload = async (e, callback) => {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -71,14 +114,13 @@ export default function AboutContent({ content }) {
 
             const result = await response.json();
             if (result.success) {
-                return result.url;
+                callback(result.url);
             }
         } catch (error) {
             console.error('Upload failed:', error);
         } finally {
             setUploading(false);
         }
-        return null;
     };
 
     const tabs = [
@@ -128,48 +170,11 @@ export default function AboutContent({ content }) {
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Background Image</label>
-                                    <div className="flex items-center gap-4">
-                                        <label className="flex-1 flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-[#ec1e63] hover:bg-pink-50/50 transition-all">
-                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                {uploading ? (
-                                                    <div className="text-center">
-                                                        <div className="w-8 h-8 border-4 border-[#ec1e63] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                                                        <p className="text-sm text-gray-500">Uploading...</p>
-                                                    </div>
-                                                ) : (
-                                                    <>
-                                                        <svg className="w-10 h-10 mb-3 text-gray-400" fill="none" viewBox="0 0 20 16">
-                                                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                                        </svg>
-                                                        <p className="text-sm text-gray-500"><span className="font-semibold">Click to upload</span></p>
-                                                        <p className="text-xs text-gray-400">PNG, JPG, WEBP (MAX. 5MB)</p>
-                                                    </>
-                                                )}
-                                            </div>
-                                            <input
-                                                type="file"
-                                                className="hidden"
-                                                accept="image/*"
-                                                onChange={async (e) => {
-                                                    const url = await handleFileUpload(e);
-                                                    if (url) setData('hero', { ...data.hero, bgImage: url });
-                                                }}
-                                                disabled={uploading}
-                                            />
-                                        </label>
-                                        {data.hero.bgImage && (
-                                            <div className="relative">
-                                                <img src={data.hero.bgImage} alt="Preview" className="w-40 h-32 object-cover rounded-xl border border-gray-200" />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setData('hero', { ...data.hero, bgImage: '' })}
-                                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
+                                    <ImageUpload
+                                        value={data.hero.bgImage}
+                                        uploading={uploading}
+                                        onChange={(e) => handleFileUpload(e, (url) => setData('hero', { ...data.hero, bgImage: url }))}
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
@@ -226,6 +231,18 @@ export default function AboutContent({ content }) {
                                             {/* Left */}
                                             <div className="space-y-3">
                                                 <h4 className="text-xs font-semibold text-gray-500 uppercase">Left</h4>
+                                                <div>
+                                                    <label className="block text-xs text-gray-500 mb-1">Image</label>
+                                                    <ImageUpload
+                                                        value={pair.left.image}
+                                                        uploading={uploading}
+                                                        onChange={(e) => handleFileUpload(e, (url) => {
+                                                            const newPairs = [...data.voice_pairs_1];
+                                                            newPairs[index].left.image = url;
+                                                            setData('voice_pairs_1', newPairs);
+                                                        })}
+                                                    />
+                                                </div>
                                                 <input
                                                     type="text"
                                                     placeholder="Name"
@@ -248,17 +265,6 @@ export default function AboutContent({ content }) {
                                                     }}
                                                     className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
                                                 />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Image URL"
-                                                    value={pair.left.image}
-                                                    onChange={(e) => {
-                                                        const newPairs = [...data.voice_pairs_1];
-                                                        newPairs[index].left.image = e.target.value;
-                                                        setData('voice_pairs_1', newPairs);
-                                                    }}
-                                                    className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
-                                                />
                                                 <textarea
                                                     placeholder="Quote"
                                                     value={pair.left.quote}
@@ -274,6 +280,18 @@ export default function AboutContent({ content }) {
                                             {/* Right */}
                                             <div className="space-y-3">
                                                 <h4 className="text-xs font-semibold text-gray-500 uppercase">Right</h4>
+                                                <div>
+                                                    <label className="block text-xs text-gray-500 mb-1">Image</label>
+                                                    <ImageUpload
+                                                        value={pair.right.image}
+                                                        uploading={uploading}
+                                                        onChange={(e) => handleFileUpload(e, (url) => {
+                                                            const newPairs = [...data.voice_pairs_1];
+                                                            newPairs[index].right.image = url;
+                                                            setData('voice_pairs_1', newPairs);
+                                                        })}
+                                                    />
+                                                </div>
                                                 <input
                                                     type="text"
                                                     placeholder="Name"
@@ -292,17 +310,6 @@ export default function AboutContent({ content }) {
                                                     onChange={(e) => {
                                                         const newPairs = [...data.voice_pairs_1];
                                                         newPairs[index].right.role = e.target.value;
-                                                        setData('voice_pairs_1', newPairs);
-                                                    }}
-                                                    className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Image URL"
-                                                    value={pair.right.image}
-                                                    onChange={(e) => {
-                                                        const newPairs = [...data.voice_pairs_1];
-                                                        newPairs[index].right.image = e.target.value;
                                                         setData('voice_pairs_1', newPairs);
                                                     }}
                                                     className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
@@ -421,6 +428,18 @@ export default function AboutContent({ content }) {
                                             {/* Left */}
                                             <div className="space-y-3">
                                                 <h4 className="text-xs font-semibold text-gray-500 uppercase">Left</h4>
+                                                <div>
+                                                    <label className="block text-xs text-gray-500 mb-1">Image</label>
+                                                    <ImageUpload
+                                                        value={pair.left.image}
+                                                        uploading={uploading}
+                                                        onChange={(e) => handleFileUpload(e, (url) => {
+                                                            const newPairs = [...data.voice_pairs_2];
+                                                            newPairs[index].left.image = url;
+                                                            setData('voice_pairs_2', newPairs);
+                                                        })}
+                                                    />
+                                                </div>
                                                 <input
                                                     type="text"
                                                     placeholder="Name"
@@ -443,17 +462,6 @@ export default function AboutContent({ content }) {
                                                     }}
                                                     className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
                                                 />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Image URL"
-                                                    value={pair.left.image}
-                                                    onChange={(e) => {
-                                                        const newPairs = [...data.voice_pairs_2];
-                                                        newPairs[index].left.image = e.target.value;
-                                                        setData('voice_pairs_2', newPairs);
-                                                    }}
-                                                    className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
-                                                />
                                                 <textarea
                                                     placeholder="Quote"
                                                     value={pair.left.quote}
@@ -469,6 +477,18 @@ export default function AboutContent({ content }) {
                                             {/* Right */}
                                             <div className="space-y-3">
                                                 <h4 className="text-xs font-semibold text-gray-500 uppercase">Right</h4>
+                                                <div>
+                                                    <label className="block text-xs text-gray-500 mb-1">Image</label>
+                                                    <ImageUpload
+                                                        value={pair.right.image}
+                                                        uploading={uploading}
+                                                        onChange={(e) => handleFileUpload(e, (url) => {
+                                                            const newPairs = [...data.voice_pairs_2];
+                                                            newPairs[index].right.image = url;
+                                                            setData('voice_pairs_2', newPairs);
+                                                        })}
+                                                    />
+                                                </div>
                                                 <input
                                                     type="text"
                                                     placeholder="Name"
@@ -487,17 +507,6 @@ export default function AboutContent({ content }) {
                                                     onChange={(e) => {
                                                         const newPairs = [...data.voice_pairs_2];
                                                         newPairs[index].right.role = e.target.value;
-                                                        setData('voice_pairs_2', newPairs);
-                                                    }}
-                                                    className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Image URL"
-                                                    value={pair.right.image}
-                                                    onChange={(e) => {
-                                                        const newPairs = [...data.voice_pairs_2];
-                                                        newPairs[index].right.image = e.target.value;
                                                         setData('voice_pairs_2', newPairs);
                                                     }}
                                                     className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]"
