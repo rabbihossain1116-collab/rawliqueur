@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutContentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ArtistController;
 use App\Http\Controllers\Admin\BlogController;
@@ -18,6 +19,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Home Content
     Route::get('home-content', [HomeContentController::class, 'index'])->name('home-content');
     Route::put('home-content', [HomeContentController::class, 'update'])->name('home-content.update');
+
+    // About Content
+    Route::get('about-content', [AboutContentController::class, 'index'])->name('about-content');
+    Route::put('about-content', [AboutContentController::class, 'update'])->name('about-content.update');
 
     // Upload
     Route::post('upload', [UploadController::class, 'store'])->name('upload');

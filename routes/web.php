@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TalentSubmissionController;
+use App\Models\AboutContent;
 use App\Models\HomeContent;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,7 +14,13 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/about', fn () => Inertia::render('About'))->name('about');
+Route::get('/about', function () {
+    $aboutContent = AboutContent::firstOrCreate(['id' => 1]);
+
+    return Inertia::render('About', [
+        'aboutContent' => $aboutContent,
+    ]);
+})->name('about');
 
 Route::get('/artists', fn () => Inertia::render('Artists'))->name('artists');
 

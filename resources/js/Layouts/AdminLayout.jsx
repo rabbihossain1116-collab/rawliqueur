@@ -4,6 +4,7 @@ import { Link, usePage } from '@inertiajs/react';
 const navigation = [
     { name: 'Dashboard', href: '/admin', icon: '📊' },
     { name: 'Home Content', href: '/admin/home-content', icon: '🏠' },
+    { name: 'About Content', href: '/admin/about-content', icon: '📖' },
     { name: 'Artists', href: '/admin/artists', icon: '🎤' },
     { name: 'Talent Submissions', href: '/admin/talent', icon: '📝' },
     { name: 'Blog Posts', href: '/admin/blog', icon: '✍️' },
