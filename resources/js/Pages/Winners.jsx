@@ -2,106 +2,6 @@ import { useState } from 'react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import { Link } from '@inertiajs/react';
 
-const featuredWinners = [
-    {
-        name: 'Priya Sengupta',
-        category: 'Singing',
-        achievement: 'Winner — Season 5 Grand Finale',
-        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face',
-        videoId: 'qz38Kthnxfo',
-        quote: 'RAW LIQUEUR gave me a platform to share my voice with the world. This journey has been life-changing.',
-        season: '5',
-        views: '6.2M',
-    },
-    {
-        name: 'Ridoy Das',
-        category: 'Singing',
-        achievement: 'Grand Champion — Season 4',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
-        videoId: 'gxet54MhNQI',
-        quote: 'From a small town in Bangladesh to the national stage — RAW LIQUEUR made it possible.',
-        season: '4',
-        views: '22M',
-    },
-    {
-        name: 'Sneha Chakraborty',
-        category: 'Singing',
-        achievement: 'Best Performer — Season 3',
-        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
-        videoId: 'sqJ2QhjBQaw',
-        quote: 'Every note I sing is for the people who believed in me. Thank you, RAW LIQUEUR.',
-        season: '3',
-        views: '76.3M',
-    },
-];
-
-const winnersBySeason = [
-    {
-        season: '5',
-        year: '2025',
-        winners: [
-            { name: 'Priya Sengupta', category: 'Singing', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face' },
-            { name: 'Tanishk Shukla', category: 'Singing', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face' },
-            { name: 'Iman Sen', category: 'Storytelling', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face' },
-        ],
-    },
-    {
-        season: '4',
-        year: '2024',
-        winners: [
-            { name: 'Ridoy Das', category: 'Singing', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face' },
-            { name: 'Diya Nandy', category: 'Dance', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face' },
-            { name: 'Farhan Ahmed', category: 'Instrumental', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face' },
-        ],
-    },
-    {
-        season: '3',
-        year: '2023',
-        winners: [
-            { name: 'Sneha Chakraborty', category: 'Singing', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face' },
-            { name: 'Rohan Mitra', category: 'Poetry', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face' },
-            { name: 'Moumita Bose', category: 'Singing', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face' },
-        ],
-    },
-];
-
-const stats = [
-    { value: '120+', label: 'Winners', icon: '🏆' },
-    { value: '5', label: 'Seasons', icon: '🎬' },
-    { value: '50K+', label: 'Participants', icon: '🎤' },
-    { value: '10M+', label: 'Votes Cast', icon: '🗳️' },
-];
-
-const testimonials = [
-    {
-        name: 'Arka Dey',
-        role: 'Season 4 Finalist',
-        text: 'The competition was fierce, but the support from the RAW LIQUEUR community kept me going. Even as a finalist, I felt like a winner.',
-        image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=100&h=100&fit=crop&crop=face',
-    },
-    {
-        name: 'Suvo Adhikary',
-        role: 'Season 3 Performer',
-        text: 'My performance reached 190M views! RAW LIQUEUR doesn\'t just find winners — they create stars.',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    },
-    {
-        name: 'Tania Khatun',
-        role: 'Season 5 Top 10',
-        text: 'From Bangladesh to the world stage. RAW LIQUEUR believed in my talent when no one else did.',
-        image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face',
-    },
-];
-
-const categoryWinners = [
-    { category: 'Best Singer', winner: 'Priya Sengupta', season: '5', icon: '🎤' },
-    { category: 'Best Dancer', winner: 'Diya Nandy', season: '4', icon: '💃' },
-    { category: 'Best Poet', winner: 'Rohan Mitra', season: '3', icon: '✍️' },
-    { category: 'Best Storyteller', winner: 'Iman Sen', season: '5', icon: '📖' },
-    { category: 'Best Musician', winner: 'Farhan Ahmed', season: '4', icon: '🎵' },
-    { category: 'People\'s Choice', winner: 'Ridoy Das', season: '4', icon: '❤️' },
-];
-
 function VideoModal({ videoId, onClose }) {
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-4" onClick={onClose}>
@@ -121,33 +21,36 @@ function VideoModal({ videoId, onClose }) {
     );
 }
 
-export default function Winners() {
+export default function Winners({ winnersContent }) {
     const [activeSeason, setActiveSeason] = useState('5');
     const [modalVideoId, setModalVideoId] = useState(null);
     const [showTalentForm, setShowTalentForm] = useState(false);
+
+    const hero = winnersContent?.hero || { bgImage: '/images/slider 1.png', title: 'Celebrating Extraordinary', subtitle: 'RAW LIQUEUR Talent Champions' };
+    const stats = winnersContent?.stats || [];
+    const featuredWinners = winnersContent?.featured_winners || [];
+    const winnersBySeason = winnersContent?.winners_by_season || [];
+    const categoryWinners = winnersContent?.category_winners || [];
+    const testimonials = winnersContent?.testimonials || [];
+    const cta = winnersContent?.cta || { icon: '🌟', title: 'Ready to be the next champion?', description: '', buttonText: '★ SUBMIT YOUR TALENT', button2Text: 'View All Artists →' };
 
     return (
         <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
             {/* Hero Section */}
             <section className="px-8 pt-6 pb-0 max-[600px]:px-4">
                 <div className="max-w-[1180px] mx-auto relative rounded-2xl overflow-hidden min-h-[340px] flex items-center bg-cover bg-center"
-                    style={{ backgroundImage: "url('/images/slider 1.png')" }}>
+                    style={{ backgroundImage: `url('${hero.bgImage}')` }}>
                     <div className="absolute inset-0 bg-black/40" />
-                    <div className="absolute right-[6%] bottom-[14%] text-[44px] opacity-85 tracking-[18px] max-[600px]:hidden">🏆 🎤 🎵 ✨</div>
                     <div className="relative z-10 p-14 max-w-[560px] max-[600px]:p-8">
                         <div className="flex items-center gap-3 mb-4">
                             <span className="text-4xl">🏆</span>
                             <span className="text-[#E9C784] font-bold text-[12px] tracking-[3px] uppercase">Hall of Fame</span>
                         </div>
-                        <div className="font-hind text-[34px] font-bold text-white text-shadow-lg mb-1.5 max-[600px]:text-[24px]">Celebrating Extraordinary</div>
-                        <div className="text-[22px] font-semibold text-[#f3d9a8] max-[600px]:text-[16px]"><span className="text-white">RAW LIQUEUR</span> Talent Champions</div>
+                        <div className="font-hind text-[34px] font-bold text-white text-shadow-lg mb-1.5 max-[600px]:text-[24px]">{hero.title}</div>
+                        <div className="text-[22px] font-semibold text-[#f3d9a8] max-[600px]:text-[16px]"><span className="text-white">{hero.subtitle}</span></div>
                         <div className="flex gap-4 flex-wrap mt-8">
-                            <a href="#featured" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_25px_-6px_rgba(236,30,99,.6)] hover:brightness-110 transition-all">
-                                ✨ Meet the Winners
-                            </a>
-                            <a href="#seasons" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-white/10 text-white border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all">
-                                Browse by Season
-                            </a>
+                            <a href="#featured" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_25px_-6px_rgba(236,30,99,.6)] hover:brightness-110 transition-all">✨ Meet the Winners</a>
+                            <a href="#seasons" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm bg-white/10 text-white border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all">Browse by Season</a>
                         </div>
                     </div>
                 </div>
@@ -182,35 +85,18 @@ export default function Winners() {
                         {featuredWinners.map((winner, i) => (
                             <div key={i} className="group bg-white rounded-2xl overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,0,0,.1)] hover:shadow-[0_25px_60px_-15px_rgba(236,30,99,.2)] transition-all duration-300 hover:-translate-y-1">
                                 <div className="relative h-[280px] overflow-hidden cursor-pointer" onClick={() => setModalVideoId(winner.videoId)}>
-                                    <img
-                                        src={`https://img.youtube.com/vi/${winner.videoId}/maxresdefault.jpg`}
-                                        alt={winner.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
+                                    <img src={`https://img.youtube.com/vi/${winner.videoId}/maxresdefault.jpg`} alt={winner.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                                    <div className="absolute top-4 left-4">
-                                        <span className="bg-gradient-to-r from-orange to-pink text-white font-bold text-[11px] py-1.5 px-3 rounded-lg tracking-wide">SEASON {winner.season}</span>
-                                    </div>
-                                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <span className="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center text-ink text-xl shadow-lg">▶</span>
-                                    </div>
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                        <div className="flex items-center gap-2 text-white/80 text-[11px] mb-1">
-                                            <span>👁 {winner.views} views</span>
-                                        </div>
-                                    </div>
+                                    <div className="absolute top-4 left-4"><span className="bg-gradient-to-r from-orange to-pink text-white font-bold text-[11px] py-1.5 px-3 rounded-lg tracking-wide">SEASON {winner.season}</span></div>
+                                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><span className="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center text-ink text-xl shadow-lg">▶</span></div>
+                                    <div className="absolute bottom-4 left-4 right-4"><div className="flex items-center gap-2 text-white/80 text-[11px] mb-1"><span>👁 {winner.views} views</span></div></div>
                                 </div>
                                 <div className="p-6">
                                     <div className="flex items-center gap-4 mb-4">
                                         <img src={winner.image} alt={winner.name} className="w-16 h-16 rounded-full object-cover border-3 border-pink/20" />
-                                        <div>
-                                            <h3 className="text-[18px] font-bold text-ink">{winner.name}</h3>
-                                            <span className="text-[11px] text-pink font-semibold tracking-[1px] uppercase">{winner.category}</span>
-                                        </div>
+                                        <div><h3 className="text-[18px] font-bold text-ink">{winner.name}</h3><span className="text-[11px] text-pink font-semibold tracking-[1px] uppercase">{winner.category}</span></div>
                                     </div>
-                                    <div className="bg-gradient-to-r from-orange/10 to-pink/10 rounded-xl px-4 py-3 mb-4">
-                                        <p className="text-[12px] font-bold text-orange">{winner.achievement}</p>
-                                    </div>
+                                    <div className="bg-gradient-to-r from-orange/10 to-pink/10 rounded-xl px-4 py-3 mb-4"><p className="text-[12px] font-bold text-orange">{winner.achievement}</p></div>
                                     <p className="text-[13.5px] text-muted leading-[1.7] italic">"{winner.quote}"</p>
                                 </div>
                             </div>
@@ -229,24 +115,14 @@ export default function Winners() {
                 <h2 className="text-center font-playfair italic font-normal text-[34px] mb-[40px] max-[480px]:text-[26px]">Every season, new legends</h2>
 
                 <div className="max-w-[1160px] mx-auto px-8 max-[980px]:px-5">
-                    {/* Season Tabs */}
                     <div className="flex justify-center gap-3 mb-[50px] flex-wrap">
                         {winnersBySeason.map((s) => (
-                            <button
-                                key={s.season}
-                                onClick={() => setActiveSeason(s.season)}
-                                className={`px-8 py-3 rounded-full font-semibold text-[14px] transition-all cursor-pointer ${
-                                    activeSeason === s.season
-                                        ? 'bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.5)]'
-                                        : 'bg-white text-ink border border-[#e8dccb] hover:border-pink'
-                                }`}
-                            >
+                            <button key={s.season} onClick={() => setActiveSeason(s.season)} className={`px-8 py-3 rounded-full font-semibold text-[14px] transition-all cursor-pointer ${activeSeason === s.season ? 'bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.5)]' : 'bg-white text-ink border border-[#e8dccb] hover:border-pink'}`}>
                                 Season {s.season} — {s.year}
                             </button>
                         ))}
                     </div>
 
-                    {/* Winners Grid */}
                     {winnersBySeason.map((s) => (
                         s.season === activeSeason && (
                             <div key={s.season} className="grid grid-cols-3 gap-8 max-[700px]:grid-cols-1 max-[980px]:grid-cols-2">
@@ -254,15 +130,11 @@ export default function Winners() {
                                     <div key={i} className="bg-white rounded-2xl p-6 text-center shadow-[0_10px_40px_-10px_rgba(0,0,0,.08)] hover:shadow-[0_15px_50px_-10px_rgba(236,30,99,.15)] transition-all duration-300">
                                         <div className="relative inline-block mb-5">
                                             <img src={winner.image} alt={winner.name} className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg" />
-                                            <span className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-orange to-pink rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-md">
-                                                {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}
-                                            </span>
+                                            <span className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-orange to-pink rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-md">{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
                                         </div>
                                         <h3 className="text-[18px] font-bold text-ink mb-1">{winner.name}</h3>
                                         <span className="text-[11px] text-pink font-semibold tracking-[1px] uppercase">{winner.category}</span>
-                                        <div className="mt-4 pt-4 border-t border-[#f0e8e0]">
-                                            <span className="text-[12px] text-muted">Season {s.season} Champion</span>
-                                        </div>
+                                        <div className="mt-4 pt-4 border-t border-[#f0e8e0]"><span className="text-[12px] text-muted">Season {s.season} Champion</span></div>
                                     </div>
                                 ))}
                             </div>
@@ -311,10 +183,7 @@ export default function Winners() {
                             <div key={i} className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
                                 <div className="flex items-center gap-4 mb-5">
                                     <img src={t.image} alt={t.name} className="w-14 h-14 rounded-full object-cover border-2 border-pink/30" />
-                                    <div>
-                                        <h4 className="text-white font-semibold text-[15px]">{t.name}</h4>
-                                        <span className="text-pink text-[11px] tracking-[1px] uppercase">{t.role}</span>
-                                    </div>
+                                    <div><h4 className="text-white font-semibold text-[15px]">{t.name}</h4><span className="text-pink text-[11px] tracking-[1px] uppercase">{t.role}</span></div>
                                 </div>
                                 <p className="text-white/70 text-[14px] leading-[1.8] italic">"{t.text}"</p>
                             </div>
@@ -326,22 +195,14 @@ export default function Winners() {
             {/* CTA Section */}
             <section className="py-[70px] max-[480px]:py-[50px]">
                 <div className="max-w-[800px] mx-auto px-8 text-center max-[480px]:px-4">
-                    <span className="text-5xl mb-4 block">🌟</span>
+                    <span className="text-5xl mb-4 block">{cta.icon}</span>
                     <h2 className="font-playfair italic text-[36px] mb-5 max-[480px]:text-[28px]">
-                        Ready to be the next{' '}
-                        <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">champion</span>?
+                        {cta.title.split('champion').map((part, i) => i === 0 ? <>{part}<span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">champion</span></> : <span key={i}>{part}</span>)}
                     </h2>
-                    <p className="text-muted text-[16px] leading-[1.8] mb-8 max-w-[500px] mx-auto">
-                        Join thousands of talented artists who have showcased their raw, unedited performances. 
-                        Your journey to the top starts with one submission.
-                    </p>
+                    <p className="text-muted text-[16px] leading-[1.8] mb-8 max-w-[500px] mx-auto">{cta.description}</p>
                     <div className="flex gap-4 justify-center flex-wrap">
-                        <button onClick={() => setShowTalentForm(true)} className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_10px_30px_-6px_rgba(236,30,99,.55)] hover:brightness-110 transition-all cursor-pointer">
-                            &#9733; SUBMIT YOUR TALENT
-                        </button>
-                        <Link href="/artists" className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm border-2 border-[#e8dccb] text-ink hover:border-pink transition-colors">
-                            View All Artists →
-                        </Link>
+                        <button onClick={() => setShowTalentForm(true)} className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_10px_30px_-6px_rgba(236,30,99,.55)] hover:brightness-110 transition-all cursor-pointer">{cta.buttonText}</button>
+                        <Link href="/artists" className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm border-2 border-[#e8dccb] text-ink hover:border-pink transition-colors">{cta.button2Text}</Link>
                     </div>
                 </div>
             </section>

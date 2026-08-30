@@ -9,7 +9,8 @@ const navigation = [
     { name: 'Artists', href: '/admin/artists', icon: '👤' },
     { name: 'Talent Submissions', href: '/admin/talent', icon: '📝' },
     { name: 'Blog Posts', href: '/admin/blog', icon: '✍️' },
-    { name: 'Winners', href: '/admin/winners', icon: '🏆' },
+    { name: 'Winners Content', href: '/admin/winners-content', icon: '🏆' },
+    { name: 'Winners', href: '/admin/winners', icon: '🥇' },
     { name: 'Contact Messages', href: '/admin/contact', icon: '📬' },
     { name: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ];
