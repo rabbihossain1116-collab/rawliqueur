@@ -103,7 +103,6 @@ export default function Blog() {
                 <div className="max-w-[1180px] mx-auto relative rounded-2xl overflow-hidden min-h-[340px] flex items-center bg-cover bg-center"
                     style={{ backgroundImage: "url('/images/slider 1.png')" }}>
                     <div className="absolute inset-0 bg-black/40" />
-                    <div className="absolute right-[6%] bottom-[14%] text-[44px] opacity-85 tracking-[18px] max-[600px]:hidden">✍️ 📖 💡 📰</div>
                     <div className="relative z-10 p-14 max-w-[560px] max-[600px]:p-8">
                         <div className="flex items-center gap-3 mb-4">
                             <span className="text-4xl">✍️</span>
