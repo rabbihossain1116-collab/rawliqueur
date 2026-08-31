@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import TalentForm from '@/Components/TalentForm';
-import { Link } from '@inertiajs/react';
 
 function VideoModal({ videoId, onClose }) {
     return (
@@ -37,6 +37,7 @@ export default function Winners({ winnersContent }) {
 
     return (
         <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
+            <Head title="Winners — RAW LIQUEUR" />
             {/* Hero Section */}
             <section className="px-4 sm:px-8 pt-5 sm:pt-6 pb-0">
                 <div className="max-w-[1180px] mx-auto relative rounded-xl sm:rounded-2xl overflow-hidden min-h-[240px] sm:min-h-[300px] md:min-h-[340px] flex items-center bg-cover bg-center"

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import TalentForm from '@/Components/TalentForm';
 
@@ -92,6 +93,7 @@ export default function Home({ homeContent }) {
 
     return (
         <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
+            <Head title="Home — RAW LIQUEUR" />
             {/* Hero */}
             <section className="relative min-h-[400px] sm:min-h-[500px] md:min-h-[600px] flex items-center">
                 <img src={hero.bgImage || '/images/slider 1.png'} alt="hero" className="absolute inset-0 w-full h-full object-cover object-center" />

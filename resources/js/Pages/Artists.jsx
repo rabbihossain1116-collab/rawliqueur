@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 import PublicLayout from '@/Layouts/PublicLayout';
 import TalentForm from '@/Components/TalentForm';
 
@@ -94,6 +95,7 @@ export default function Artists({ artistsContent }) {
 
     return (
         <PublicLayout onSubmitTalent={() => setShowTalentForm(true)}>
+            <Head title="Artists — RAW LIQUEUR" />
             {/* Hero */}
             <section className="max-w-[1180px] mx-auto mt-4 sm:mt-5 md:mt-[22px] px-4 sm:px-8">
                 <div className="relative rounded-xl sm:rounded-2xl overflow-hidden h-[250px] sm:h-[320px] md:h-[400px] bg-cover bg-center"
