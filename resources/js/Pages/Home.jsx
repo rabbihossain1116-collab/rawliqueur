@@ -248,17 +248,17 @@ export default function Home({ homeContent }) {
             </section>
 
             {/* CTA Banner */}
-            <div className="relative max-w-[1160px] mx-auto mb-10 sm:mb-14 md:mb-[70px] rounded-2xl sm:rounded-[22px] overflow-hidden mx-4 sm:mx-auto flex items-center justify-end px-5 sm:px-[40px] md:px-[50px] py-6 sm:py-8 md:py-9 gap-4 sm:gap-5 md:gap-6">
-                <img src={cta.bgImage || '/images/footer.png'} alt="cta" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="relative max-w-[1160px] mx-auto mb-10 sm:mb-14 md:mb-[70px] rounded-2xl sm:rounded-[22px] overflow-hidden mx-4 sm:mx-auto flex flex-col sm:flex-row items-center sm:items-center justify-center sm:justify-end px-5 sm:px-[40px] md:px-[50px] py-6 sm:py-8 md:py-9 gap-4 sm:gap-5 md:gap-6 text-center sm:text-right">
+                <img src={cta.bgImage || '/images/footer.png'} alt="cta" className="absolute inset-0 w-full h-full object-cover sm:object-center object-left" />
                 <div className="absolute inset-0 bg-black/40" />
-                <div className="relative z-10 text-left sm:text-right flex-1">
+                <div className="relative z-10">
                     <div className="text-white text-[10px] sm:text-xs font-bold tracking-[1.5px] sm:tracking-[2px] mb-1.5 sm:mb-2">{cta.tagline}</div>
                     <h3 className="text-[20px] sm:text-[22px] md:text-[26px] font-bold leading-[1.3] sm:leading-[1.4] text-white">
                         {cta.title}<br />
                         <span className="bg-gradient-to-r from-orange to-pink bg-clip-text text-transparent">{cta.highlight}</span>
                     </h3>
                 </div>
-                <button onClick={() => setShowTalentForm(true)} className="relative z-10 inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 whitespace-nowrap cursor-pointer flex-shrink-0">
+                <button onClick={() => setShowTalentForm(true)} className="relative z-10 inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-semibold text-xs sm:text-sm bg-gradient-to-r from-orange to-pink text-white shadow-[0_8px_20px_-6px_rgba(236,30,99,.55)] hover:brightness-105 whitespace-nowrap cursor-pointer flex-shrink-0">
                     {cta.buttonText}
                 </button>
             </div>
