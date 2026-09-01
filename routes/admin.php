@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\WinnerController;
 use App\Http\Controllers\Admin\WinnersPageContentController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     // Dashboard
@@ -70,4 +71,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::put('settings/email', [SettingController::class, 'updateEmail'])->name('settings.email.update');
     Route::post('settings/test-email', [SettingController::class, 'sendTestEmail'])->name('settings.test-email');
+
+    // Generate storage symlink
+    Route::post('storage-link', function () {
+        Artisan::call('storage:link');
+        return response()->json(['message' => Artisan::output()]);
+    })->name('storage-link');
 });
+
+// Serve submission files (no auth — email links need direct access, paths are random/hard to guess)
+Route::get('admin/submissions/{path}', [\App\Http\Controllers\Admin\SubmissionFileController::class, 'show'])
+    ->where('path', '.*')
+    ->name('admin.submissions.show');

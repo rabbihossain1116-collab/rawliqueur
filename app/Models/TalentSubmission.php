@@ -38,6 +38,7 @@ class TalentSubmission extends Model
         'gender',
         'division',
         'district',
+        'address',
         'phone',
         'email',
         'talent_type',

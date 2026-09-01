@@ -44,7 +44,7 @@ class SettingController extends Controller
             'allow_submissions' => 'boolean',
         ]);
 
-        return redirect()->route('admin.settings')->with('success', 'Settings updated successfully.');
+        return redirect()->route('admin.settings', ['tab' => 'general'])->with('success', 'Settings updated successfully.');
     }
 
     public function updateEmail(Request $request)
@@ -56,15 +56,15 @@ class SettingController extends Controller
             'mail_username' => 'nullable|string|max:255',
             'mail_password' => 'nullable|string|max:255',
             'mail_encryption' => 'required|string|in:tls,ssl',
-            'mail_from_address' => 'required|email',
+            'mail_from_address' => 'nullable|email',
             'mail_from_name' => 'required|string|max:255',
-            'submissions_to' => 'required|email',
+            'submissions_to' => 'nullable|email',
             'notifications_enabled' => 'boolean',
         ]);
 
         EmailSetting::updateOrCreate(['id' => 1], $validated);
 
-        return redirect()->route('admin.settings')->with('success', 'Email settings updated successfully.');
+        return redirect()->route('admin.settings', ['tab' => 'email'])->with('success', 'Email settings updated successfully.');
     }
 
     public function sendTestEmail(Request $request)
@@ -75,20 +75,35 @@ class SettingController extends Controller
 
         $emailSettings = EmailSetting::first();
 
-        if (! $emailSettings || ! $emailSettings->notifications_enabled) {
-            return redirect()->route('admin.settings')->with('error', 'Email notifications are not enabled.');
+        if (! $emailSettings) {
+            return redirect()->route('admin.settings', ['tab' => 'email'])->with('error', 'Please save email settings first before sending a test email.');
         }
 
         try {
-            Mail::raw('This is a test email from RAW LIQUEUR admin panel. If you received this, your email configuration is working correctly.', function ($message) use ($request, $emailSettings) {
+            config([
+                'mail.default' => 'smtp',
+                'mail.mailers.smtp.transport' => $emailSettings->mail_driver,
+                'mail.mailers.smtp.host' => $emailSettings->mail_host,
+                'mail.mailers.smtp.port' => $emailSettings->mail_port,
+                'mail.mailers.smtp.username' => $emailSettings->mail_username,
+                'mail.mailers.smtp.password' => $emailSettings->mail_password,
+                'mail.mailers.smtp.encryption' => $emailSettings->mail_encryption,
+                'mail.from.address' => $emailSettings->mail_from_address,
+                'mail.from.name' => $emailSettings->mail_from_name,
+            ]);
+
+            Mail::purge();
+            Mail::purge('smtp');
+
+            Mail::mailer('smtp')->raw('This is a test email from RAW LIQUEUR admin panel. If you received this, your email configuration is working correctly.', function ($message) use ($request, $emailSettings) {
                 $message->to($request->test_email)
                     ->subject('RAW LIQUEUR - Test Email')
                     ->from($emailSettings->mail_from_address, $emailSettings->mail_from_name);
             });
 
-            return redirect()->route('admin.settings')->with('success', 'Test email sent successfully!');
+            return redirect()->route('admin.settings', ['tab' => 'email'])->with('success', 'Test email sent successfully!');
         } catch (\Throwable $exception) {
-            return redirect()->route('admin.settings')->with('error', 'Failed to send test email: '.$exception->getMessage());
+            return redirect()->route('admin.settings', ['tab' => 'email'])->with('error', 'Failed to send test email: '.$exception->getMessage());
         }
     }
 }

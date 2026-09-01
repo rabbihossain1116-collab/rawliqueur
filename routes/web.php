@@ -59,7 +59,7 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::post('/submit-talent', [TalentSubmissionController::class, 'store'])
-    ->middleware('throttle:6,60')
+    ->middleware('throttle:20,60')
     ->name('talent.store');
 
 // Admin routes

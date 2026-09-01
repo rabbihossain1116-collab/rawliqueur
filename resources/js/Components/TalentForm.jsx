@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function TalentForm({ onClose }) {
     const [form, setForm] = useState({
@@ -11,6 +11,7 @@ export default function TalentForm({ onClose }) {
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [serverError, setServerError] = useState('');
 
     const handleRadio = (field, value) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -39,14 +40,19 @@ export default function TalentForm({ onClose }) {
         if (!validate()) return;
 
         setSubmitting(true);
+        setServerError('');
         try {
+            const talentMap = {
+                'গান': 'singing', 'কবিতা': 'poetry', 'নৃত্য': 'dance',
+                'লোকসংগীত': 'folk', 'অন্যান্য': 'storytelling',
+            };
             const formData = new FormData();
             formData.append('name', form.name);
             formData.append('age', form.age);
             formData.append('gender', form.gender === 'পুরুষ' ? 'male' : 'female');
             formData.append('address', form.address || '');
             formData.append('phone', form.phone);
-            formData.append('talentType', form.talentType);
+            formData.append('talentType', talentMap[form.talentType] || 'singing');
             formData.append('isRaw', form.isRaw === 'হ্যাঁ' ? '1' : '0');
             formData.append('duration', form.duration);
             formData.append('consentPublish', '1');
@@ -72,9 +78,13 @@ export default function TalentForm({ onClose }) {
                 if (result.errors) {
                     setErrors(result.errors);
                 }
+                if (result.message) {
+                    setServerError(result.message);
+                }
             }
         } catch (error) {
             console.error('Submit failed:', error);
+            setServerError('সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
         } finally {
             setSubmitting(false);
         }
@@ -328,9 +338,15 @@ export default function TalentForm({ onClose }) {
                             <p className="text-[12px] text-[#7a7488] mb-3">JPG / JPEG / PNG — সর্বোচ্চ 5MB</p>
                             <label className="border-2 border-dashed border-[#c99a4a] rounded-[14px] bg-[#fffdf8] py-[44px] px-5 text-center cursor-pointer block mb-6 hover:bg-[#fdf6e8] hover:border-[#a5372c] transition-all">
                                 <input type="file" accept=".jpg,.jpeg,.png" className="hidden" onChange={(e) => setForm({ ...form, photo: e.target.files[0] })} />
-                                <div className="w-[52px] h-[52px] rounded-full bg-[#f4ead9] text-[#a5372c] flex items-center justify-center mx-auto mb-3.5 text-[22px]">⬆</div>
-                                <div className="text-[14.5px] font-bold text-[#2b2115] mb-1">{form.photo ? form.photo.name : 'ছবি নির্বাচন করতে ক্লিক করুন'}</div>
-                                <div className="text-[12.5px] text-[#7a7488]">অথবা ড্র্যাগ করুন</div>
+                                {form.photo ? (
+                                    <img src={URL.createObjectURL(form.photo)} alt="preview" className="max-h-[200px] rounded-lg mx-auto" />
+                                ) : (
+                                    <>
+                                        <div className="w-[52px] h-[52px] rounded-full bg-[#f4ead9] text-[#a5372c] flex items-center justify-center mx-auto mb-3.5 text-[22px]">⬆</div>
+                                        <div className="text-[14.5px] font-bold text-[#2b2115] mb-1">ছবি নির্বাচন করতে ক্লিক করুন</div>
+                                        <div className="text-[12.5px] text-[#7a7488]">অথবা ড্র্যাগ করুন</div>
+                                    </>
+                                )}
                             </label>
                             {errors.photo && <p className="text-red-500 text-[11px] mb-3">{errors.photo}</p>}
 
@@ -340,14 +356,32 @@ export default function TalentForm({ onClose }) {
                             <p className="text-[12px] text-[#7a7488] mb-3">MP4 / MOV / WebM — সর্বোচ্চ 500MB</p>
                             <label className="border-2 border-dashed border-[#c99a4a] rounded-[14px] bg-[#fffdf8] py-[44px] px-5 text-center cursor-pointer block hover:bg-[#fdf6e8] hover:border-[#a5372c] transition-all">
                                 <input type="file" accept=".mp4,.mov,.webm" className="hidden" onChange={(e) => setForm({ ...form, video: e.target.files[0] })} />
-                                <div className="w-[52px] h-[52px] rounded-full bg-[#f4ead9] text-[#a5372c] flex items-center justify-center mx-auto mb-3.5 text-[22px]">▶</div>
-                                <div className="text-[14.5px] font-bold text-[#2b2115] mb-1">{form.video ? form.video.name : 'ভিডিও নির্বাচন করতে ক্লিক করুন'}</div>
-                                <div className="text-[12.5px] text-[#7a7488]">MP4, MOV, WebM ফরম্যাটে আপলোড করুন</div>
+                                {form.video ? (
+                                    <video src={URL.createObjectURL(form.video)} controls className="max-h-[200px] rounded-lg mx-auto" />
+                                ) : (
+                                    <>
+                                        <div className="w-[52px] h-[52px] rounded-full bg-[#f4ead9] text-[#a5372c] flex items-center justify-center mx-auto mb-3.5 text-[22px]">▶</div>
+                                        <div className="text-[14.5px] font-bold text-[#2b2115] mb-1">ভিডিও নির্বাচন করতে ক্লিক করুন</div>
+                                        <div className="text-[12.5px] text-[#7a7488]">MP4, MOV, WebM ফরম্যাটে আপলোড করুন</div>
+                                    </>
+                                )}
                             </label>
                             {errors.video && <p className="text-red-500 text-[11px] mt-1">{errors.video}</p>}
                         </section>
 
                         {/* SUBMIT */}
+                        {serverError && (
+                            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 text-red-700 text-sm">{serverError}</div>
+                        )}
+                        {Object.keys(errors).length > 0 && (
+                            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 text-red-700 text-sm">
+                                <ul className="list-disc list-inside">
+                                    {Object.entries(errors).map(([field, msgs]) => (
+                                        <li key={field}>{Array.isArray(msgs) ? msgs[0] : msgs}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                         <button type="submit" disabled={submitting} className="w-full py-[18px] border-none rounded-[14px] bg-gradient-to-br from-[#e6c584] to-[#c99a4a] text-[#3a2712] text-[16.5px] font-bold font-noto-serif-bengali cursor-pointer transition-all hover:brightness-[1.04] active:translate-y-[1px] shadow-[0_8px_18px_rgba(201,154,74,.28)] disabled:opacity-50 disabled:cursor-not-allowed">
                             {submitting ? '⏳ জমা হচ্ছে...' : 'Submit — আপনার প্রতিভা জমা দিন'}
                         </button>

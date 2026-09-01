@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useForm, usePage } from '@inertiajs/react';
 
 export default function Settings({ settings, emailSettings }) {
-    const { flash } = usePage().props;
-    const [activeTab, setActiveTab] = useState('general');
+    const { flash, errors } = usePage().props;
+    const [activeTab, setActiveTab] = useState(() => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('tab') || 'general';
+    });
+    const [showFlash, setShowFlash] = useState({ success: null, error: null });
+
+    useEffect(() => {
+        if (flash?.success) {
+            setShowFlash({ success: flash.success, error: null });
+            const timer = setTimeout(() => setShowFlash({ success: null, error: null }), 5000);
+            return () => clearTimeout(timer);
+        }
+        if (flash?.error) {
+            setShowFlash({ success: null, error: flash.error });
+            const timer = setTimeout(() => setShowFlash({ success: null, error: null }), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [flash]);
 
     const { data: generalData, setData: setGeneralData, put: putGeneral, processing: generalProcessing } = useForm({
         site_name: settings.site_name,
@@ -36,23 +53,32 @@ export default function Settings({ settings, emailSettings }) {
 
     const handleGeneralSubmit = (e) => {
         e.preventDefault();
-        putGeneral('/admin/settings');
+        putGeneral('/admin/settings?tab=general');
     };
 
     const handleEmailSubmit = (e) => {
         e.preventDefault();
-        putEmail('/admin/settings/email');
+        putEmail('/admin/settings/email?tab=email');
     };
 
     const handleTestEmail = (e) => {
         e.preventDefault();
-        postTest('/admin/settings/test-email');
+        postTest('/admin/settings/test-email?tab=email');
     };
 
     return (
         <AdminLayout title="Settings">
-            {flash?.success && <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">{flash.success}</div>}
-            {flash?.error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">{flash.error}</div>}
+            {showFlash.success && <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">{showFlash.success}</div>}
+            {showFlash.error && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">{showFlash.error}</div>}
+            {Object.keys(errors || {}).length > 0 && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                    <ul className="list-disc list-inside">
+                        {Object.entries(errors).map(([field, message]) => (
+                            <li key={field}>{message}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
 
             {/* Tabs */}
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -146,9 +172,9 @@ export default function Settings({ settings, emailSettings }) {
 
             {/* Email Settings */}
             {activeTab === 'email' && (
-                <form onSubmit={handleEmailSubmit}>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="lg:col-span-2 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 space-y-6">
+                        <form id="emailSettingsForm" onSubmit={handleEmailSubmit}>
                             {/* SMTP Configuration */}
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                                 <h3 className="text-lg font-bold text-[#1a1425] mb-6">SMTP Configuration</h3>
@@ -228,42 +254,40 @@ export default function Settings({ settings, emailSettings }) {
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+
+                    {/* Sidebar */}
+                    <div className="space-y-6">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                            <h3 className="text-lg font-bold text-[#1a1425] mb-6">Publish</h3>
+                            <button type="submit" form="emailSettingsForm" disabled={emailProcessing} className="w-full px-5 py-3 bg-gradient-to-r from-[#ec1e63] to-[#f7941e] text-white font-medium text-sm rounded-xl hover:shadow-lg hover:shadow-pink-200 transition-all disabled:opacity-50">
+                                {emailProcessing ? 'Saving...' : 'Save Email Settings'}
+                            </button>
                         </div>
 
-                        {/* Sidebar */}
-                        <div className="space-y-6">
-                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                                <h3 className="text-lg font-bold text-[#1a1425] mb-6">Publish</h3>
-                                <button type="submit" disabled={emailProcessing} className="w-full px-5 py-3 bg-gradient-to-r from-[#ec1e63] to-[#f7941e] text-white font-medium text-sm rounded-xl hover:shadow-lg hover:shadow-pink-200 transition-all disabled:opacity-50">
-                                    {emailProcessing ? 'Saving...' : 'Save Email Settings'}
-                                </button>
-                            </div>
+                        {/* Test Email - OUTSIDE the email form */}
+                        <form onSubmit={handleTestEmail} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-3">
+                            <h3 className="text-lg font-bold text-[#1a1425] mb-4">Test Email</h3>
+                            <p className="text-xs text-gray-500 mb-4">Send a test email to verify your configuration is working.</p>
+                            <input type="email" value={testData.test_email} onChange={(e) => setTestData('test_email', e.target.value)} placeholder="test@example.com" required className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]" />
+                            <button type="submit" disabled={testProcessing} className="w-full px-5 py-2.5 bg-gray-900 text-white font-medium text-sm rounded-xl hover:bg-gray-800 transition-all disabled:opacity-50">
+                                {testProcessing ? 'Sending...' : 'Send Test Email'}
+                            </button>
+                        </form>
 
-                            {/* Test Email */}
-                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                                <h3 className="text-lg font-bold text-[#1a1425] mb-4">Test Email</h3>
-                                <p className="text-xs text-gray-500 mb-4">Send a test email to verify your configuration is working.</p>
-                                <form onSubmit={handleTestEmail} className="space-y-3">
-                                    <input type="email" value={testData.test_email} onChange={(e) => setTestData('test_email', e.target.value)} placeholder="test@example.com" required className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#ec1e63]" />
-                                    <button type="submit" disabled={testProcessing} className="w-full px-5 py-2.5 bg-gray-900 text-white font-medium text-sm rounded-xl hover:bg-gray-800 transition-all disabled:opacity-50">
-                                        {testProcessing ? 'Sending...' : 'Send Test Email'}
-                                    </button>
-                                </form>
-                            </div>
-
-                            {/* SMTP Providers */}
-                            <div className="bg-gradient-to-br from-[#1a1425] to-[#3a3548] rounded-2xl p-6 text-white">
-                                <h3 className="font-bold mb-3">Popular SMTP Providers</h3>
-                                <div className="space-y-2 text-sm text-white/70">
-                                    <p><strong className="text-white">Gmail:</strong> smtp.gmail.com:587</p>
-                                    <p><strong className="text-white">Mailtrap:</strong> smtp.mailtrap.io:587</p>
-                                    <p><strong className="text-white">SendGrid:</strong> smtp.sendgrid.net:587</p>
-                                    <p><strong className="text-white">Outlook:</strong> smtp.office365.com:587</p>
-                                </div>
+                        {/* SMTP Providers */}
+                        <div className="bg-gradient-to-br from-[#1a1425] to-[#3a3548] rounded-2xl p-6 text-white">
+                            <h3 className="font-bold mb-3">Popular SMTP Providers</h3>
+                            <div className="space-y-2 text-sm text-white/70">
+                                <p><strong className="text-white">Gmail:</strong> smtp.gmail.com:587</p>
+                                <p><strong className="text-white">Mailtrap:</strong> smtp.mailtrap.io:587</p>
+                                <p><strong className="text-white">SendGrid:</strong> smtp.sendgrid.net:587</p>
+                                <p><strong className="text-white">Outlook:</strong> smtp.office365.com:587</p>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
             )}
         </AdminLayout>
     );
